@@ -1,0 +1,33 @@
+---
+layout: post
+status: publish
+published: true
+title: llvm与clang编译安装
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 159
+wordpress_url: http://amutu.com/blog/?p=159
+date: '2013-04-19 16:00:28 +0800'
+date_gmt: '2013-04-19 08:00:28 +0800'
+categories:
+- linux
+tags:
+- llvm
+- clang
+comments: []
+---
+<p><code lang="bash">wget http:&#47;&#47;llvm.org&#47;releases&#47;3.2&#47;llvm-3.2.src.tar.gz<br />
+tar xvzf llvm-3.2.src.tar.gz<br />
+cd llvm-3.2.src&#47;tools<br />
+svn co http:&#47;&#47;llvm.org&#47;svn&#47;llvm-project&#47;cfe&#47;tags&#47;RELEASE_32&#47;final&#47; clang<br />
+cd ..&#47;projects<br />
+svn co http:&#47;&#47;llvm.org&#47;svn&#47;llvm-project&#47;compiler-rt&#47;tags&#47;RELEASE_32&#47;final&#47; compiler-rt<br />
+cd ..<br />
+.&#47;configure<br />
+make -j4 REQUIRES_RTTI=1<br />
+sudo make install<&#47;code></p>

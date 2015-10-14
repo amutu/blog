@@ -1,0 +1,138 @@
+---
+layout: post
+status: publish
+published: true
+title: tplink tl-wr703n OpenWrt升级和配置
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 44
+wordpress_url: http://amutu.com/blog/?p=44
+date: '2012-10-13 23:11:14 +0800'
+date_gmt: '2012-10-13 15:11:14 +0800'
+categories:
+- linux
+tags: []
+comments:
+- id: 494
+  author: "哈哈！用一个简单方法搞定了翻墙VPN了 | Jeff&#039;s space"
+  author_email: ''
+  author_url: http://jeffliz.wordpress.com/2013/07/04/%e5%93%88%e5%93%88%ef%bc%81%e7%94%a8%e4%b8%80%e4%b8%aa%e7%ae%80%e5%8d%95%e6%96%b9%e6%b3%95%e6%90%9e%e5%ae%9a%e4%ba%86%e7%bf%bb%e5%a2%99vpn%e4%ba%86/
+  date: '2013-07-28 19:41:22 +0800'
+  date_gmt: '2013-07-28 11:41:22 +0800'
+  content: "[...] http:&#47;&#47;blog.csdn.net&#47;ydogg&#47;article&#47;details&#47;8945766
+    http:&#47;&#47;www.ncnynl.com&#47;doc&#47;201302&#47;6282.htm http:&#47;&#47;wiki.tuna.tsinghua.edu.cn&#47;OpenWrt&#47;Tplink%20WR-703N
+    https:&#47;&#47;gist.github.com&#47;ninehills&#47;2627163#comments http:&#47;&#47;www.sl088.com&#47;voyage&#47;2012&#47;03&#47;3201.slboat
+    http:&#47;&#47;amutu.com&#47;blog&#47;2012&#47;10&#47;tplink-tl-wr703n-openwrt%E5%8D%87%E7%BA%A7%E5%92%8C%E9%85%8D%E7%BD%AE&#47;
+    [...]"
+---
+<p><strong>升级<&#47;strong></p>
+<p>在官网上找到要升级的目标固件，这里是：http:&#47;&#47;downloads.openwrt.org&#47;attitude_adjustment&#47;12.09-beta&#47;ar71xx&#47;generic&#47;openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin</p>
+<p>ssh登录到tl-wr703n中，将目标固件下载到&#47;tmp。这里注意只能悬在&#47;tmp目录，因为tl-wr703n的内置存储空间总共4M，出去已经安装的固件，剩余空间不足以存放要下载的固件，但是&#47;tmp目录因为挂在的是内存文件系统，所以空间够用。</p>
+<p><code lang="bash"><br />
+cd &#47;tmp<br />
+wget&nbsp;http:&#47;&#47;downloads.openwrt.org&#47;attitude_adjustment&#47;12.09-beta&#47;ar71xx&#47;generic&#47;openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin<br />
+wget&nbsp;http:&#47;&#47;downloads.openwrt.org&#47;attitude_adjustment&#47;12.09-beta&#47;ar71xx&#47;generic&#47;md5sums<br />
+md5sum&nbsp;openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin<br />
+<&#47;code><br />
+把得到的md5与md5sums文件的对应行对比，确保一致。</p>
+<p>然后进行更新：<br />
+<code lang="bash"><br />
+sysupgrade -v .&#47;openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin<br />
+<&#47;code><br />
+更新完毕后会自动重启</p>
+<p><strong>配置<&#47;strong></p>
+<p>1.配置USB<br />
+<code lang="bash"><br />
+opkg update<br />
+opkg install kmod-usb-storage<br />
+opkg install block-mount<br />
+<&#47;code><br />
+2.配置USB在启动时自动mount，在&#47;etc&#47;config&#47;fstab中增加以下内容：<br />
+<code lang="bash"><br />
+config mount<br />
+option target &#47;data<br />
+option device &#47;dev&#47;sda<br />
+option fstype ext4<br />
+option options rw,sync<br />
+option enabled 1<br />
+option enabled_fsck 0<br />
+<&#47;code><br />
+3.配置网络（&#47;etc&#47;config&#47;network），我们要把路由器配置为router AP，也就是AP的WIFI网络，与连接路由的LAN的网络不在一个网段上。<br />
+<code lang="bash"><br />
+config interface 'loopback'<br />
+option ifname 'lo'<br />
+option proto 'static'<br />
+option ipaddr '127.0.0.1'<br />
+option netmask '255.0.0.0'</p>
+<p>config interface 'wan'<br />
+option ifname 'eth0'<br />
+# option type 'bridge'<br />
+option proto 'dhcp'<br />
+option ipaddr '192.168.1.1'<br />
+option netmask '255.255.255.0'</p>
+<p>config interface 'wlan0'<br />
+option proto 'dhcp'</p>
+<p>config 'interface' 'wifi'<br />
+option proto static<br />
+option ipaddr 192.168.254.254<br />
+option netmask 255.255.255.0<br />
+<&#47;code><br />
+4.配置无线AP(&#47;etc&#47;config&#47;wireless)<br />
+<code lang="bash"><br />
+config wifi-device radio0<br />
+option type mac80211<br />
+option channel 11<br />
+option macaddr ec:17:2f:f0:a3:fe<br />
+option hwmode 11ng<br />
+option htmode HT20<br />
+list ht_capab SHORT-GI-20<br />
+list ht_capab SHORT-GI-40<br />
+list ht_capab RX-STBC1<br />
+list ht_capab DSSS_CCK-40<br />
+# REMOVE THIS LINE TO ENABLE WIFI:<br />
+# option disabled 1</p>
+<p>config wifi-iface<br />
+option device radio0<br />
+option network wifi<br />
+option mode ap<br />
+option ssid myssid<br />
+option hidden 1<br />
+option encryption psk2<br />
+option key 'mypass'<br />
+<&#47;code><br />
+5.配置无线AP的DHCP服务：</p>
+<p>在&#47;etc&#47;config&#47;dhcp文件后添加：<br />
+<code lang="bash"><br />
+config 'dhcp' 'wifi'<br />
+option 'interface' 'wifi'<br />
+option 'start' '150'<br />
+option 'limit' '200'<br />
+option 'leasetime' '24h'<br />
+<&#47;code><br />
+6.配置防火墙：<br />
+在&#47;etc&#47;config&#47;firewall中添加：<br />
+<code lang="bash"><br />
+config zone<br />
+option name wifi<br />
+option network 'wifi'<br />
+option input ACCEPT<br />
+option output ACCEPT<br />
+option forward REJECT</p>
+<p>config forwarding<br />
+option src lan<br />
+option dest wan</p>
+<p>config forwarding<br />
+option src wifi<br />
+option dest wan</p>
+<p>config forwarding<br />
+option src lan<br />
+option dest wifi</p>
+<p>config forwarding<br />
+option src wifi<br />
+option dest lan<br />
+<&#47;code></p>

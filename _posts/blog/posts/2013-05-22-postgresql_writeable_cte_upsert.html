@@ -1,0 +1,53 @@
+---
+layout: post
+status: publish
+published: true
+title: "使用PostgreSQL Writeable CTE实现upsert(merge&#47;replace)"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 200
+wordpress_url: http://amutu.com/blog/?p=200
+date: '2013-05-22 09:23:23 +0800'
+date_gmt: '2013-05-22 01:23:23 +0800'
+categories:
+- pgsql
+tags: []
+comments: []
+---
+
+<p>当客户端可以保证不会出现并发的时候，可以使用PostgreSQL的writeable CTE实现upsert功能。如果存在并发，writeable会出现race conditions而出现问题，这时就需要使用UDF实现。</p>
+<p><code lang="sql"><br />
+WITH new_values (id, field1, field2) as (<br />
+values<br />
+(1, 'A', 'X'),<br />
+(2, 'B', 'Y'),<br />
+(3, 'C', 'Z')<br />
+),<br />
+upsert as<br />
+(<br />
+update mytable m<br />
+set field1 = nv.field1,<br />
+field2 = nv.field2<br />
+FROM new_values nv<br />
+WHERE m.id = nv.id<br />
+RETURNING m.*<br />
+)<br />
+INSERT INTO mytable (id, field1, field2)<br />
+SELECT id, field1, field2<br />
+FROM new_values<br />
+WHERE NOT EXISTS (SELECT 1<br />
+FROM upsert up<br />
+WHERE up.id = new_values.id)<br />
+<&#47;code></p>
+<p>原链接：<a href="http:&#47;&#47;stackoverflow.com&#47;questions&#47;1109061&#47;insert-on-duplicate-update-postgresql&#47;8702291#8702291">http:&#47;&#47;stackoverflow.com&#47;questions&#47;1109061&#47;insert-on-duplicate-update-postgresql&#47;8702291#8702291<&#47;a></p>
+<p>相关连接：</p>
+<ul>
+<li><a href="http:&#47;&#47;xzilla.net&#47;blog&#47;2011&#47;Mar&#47;Upserting-via-Writeable-CTE.html">Upserting via Writeable CTE<&#47;a><&#47;li>
+<li><a href="http:&#47;&#47;www.depesz.com&#47;index.php&#47;2011&#47;03&#47;16&#47;waiting-for-9-1-writable-cte">WAITING FOR 9.1 &ndash; WRITABLE CTE<&#47;a><&#47;li>
+<li><a href="http:&#47;&#47;www.depesz.com&#47;2012&#47;06&#47;10&#47;why-is-upsert-so-complicated&#47;">WHY IS UPSERT SO COMPLICATED?<&#47;a><&#47;li><br />
+<&#47;ul></p>

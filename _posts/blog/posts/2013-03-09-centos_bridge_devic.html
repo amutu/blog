@@ -1,0 +1,80 @@
+---
+layout: post
+status: publish
+published: true
+title: centos创建bridge网络接口
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 125
+wordpress_url: http://amutu.com/blog/?p=125
+date: '2013-03-09 21:18:17 +0800'
+date_gmt: '2013-03-09 13:18:17 +0800'
+categories:
+- linux
+tags: []
+comments:
+- id: 130
+  author: ggzzzzzzz
+  author_email: ggzzzzzzz@yahoo.com.cn
+  author_url: ''
+  date: '2013-04-19 08:50:57 +0800'
+  date_gmt: '2013-04-19 00:50:57 +0800'
+  content: RHEL升级到6.4后碰到同样的问题，谢谢你的分享，问题解决了
+- id: 509
+  author: higkoo
+  author_email: higkoohk@gmail.com
+  author_url: http://hi.baidu.com/higkoo
+  date: '2013-10-07 15:18:07 +0800'
+  date_gmt: '2013-10-07 07:18:07 +0800'
+  content: "最好在sysctl里加上这些选项：\r\nnet.ipv4.conf.em1.rp_filter = 0\r\nnet.ipv4.conf.em2.rp_filter
+    = 0\r\nnet.ipv4.conf.br0.rp_filter = 0\r\nnet.ipv4.conf.all.rp_filter = 0\r\n否则多网卡是可能会不通。"
+---
+<h2>升级了centos后，之前建的bridge设备起不来了，原网卡和bridge网卡在启动时分别报错：<&#47;h2><br />
+原网卡eth0: Connection activation failed: Master connection not found or invalid</p>
+<p>bridge网卡br0:Conncetion activation failed: Failed to determine connection's virtual interface name</p>
+<p>自己折腾了一阵不成功，最后按照下面的文章设置ok。原来是NetworkManager的原因，升级后NetworkManager接管了网卡启动，将NetworkManager停掉，之前的配置就可以启动网卡了。</p>
+<h2>SETUP BRIDGE DEVICE ON CENTOS<&#47;h2></p>
+<div>
+<p>Howto setup a bridge device on CentOS or Fedora.</p>
+<p>If you need to bring your KVM VM&rsquo;s into the same local area network like your host is in you need to configure a bridge device.</p>
+<p>1. Install all needed packages:</p>
+<blockquote><p>yum install bridge-utils<&#47;blockquote></p>
+<blockquote><p>yum install tunctl<&#47;blockquote><br />
+2. Disable NetworkManager and enable network at boot time:</p>
+<blockquote><p>chkconfig NetworkManager off<&#47;blockquote></p>
+<blockquote><p>chkconfig &ndash;levels 35 network on<&#47;blockquote></p>
+<blockquote><p>&#47;etc&#47;init.d&#47;NetworkManager stop<&#47;blockquote></p>
+<blockquote><p>&#47;etc&#47;init.d&#47;network restart<&#47;blockquote><br />
+3. Create br0 configuration</p>
+<blockquote><p>vi &#47;etc&#47;sysconfig&#47;network-scripts&#47;ifcfg-br0<&#47;blockquote><br />
+Change following configuration to your needs.</p>
+<blockquote><p>DEVICE=br0<br />
+TYPE=Bridge<br />
+BOOTPROTO=static<br />
+DNS1=192.168.0.1<br />
+GATEWAY=192.168.0.1<br />
+IPADDR=192.168.0.100<br />
+NETMASK=255.255.255.0<br />
+ONBOOT=yes<br />
+SEARCH=&rdquo;example.com&rdquo;<&#47;blockquote><br />
+4. Modify eth0 configuration:</p>
+<blockquote><p>vi &#47;etc&#47;sysconfig&#47;network-scripts&#47;ifcfg-eth0<&#47;blockquote></p>
+<blockquote><p>DEVICE=eth0<br />
+HWADDR=00:1e:90:f3:f0:02<br />
+ONBOOT=yes<br />
+TYPE=Ethernet<br />
+IPV6INIT=no<br />
+USERCTL=no<br />
+BRIDGE=br0<&#47;blockquote><br />
+5. Restart network or reboot machine</p>
+<blockquote><p>&#47;etc&#47;init.d&#47;network restart<&#47;blockquote><br />
+or</p>
+<blockquote><p>reboot<&#47;blockquote><br />
+<a title="libvirt wiki bridging" href="http:&#47;&#47;wiki.libvirt.org&#47;page&#47;Networking#Bridged_networking_.28aka_.22shared_physical_device.22.29" target="_blank">Here<&#47;a>&nbsp;are some additional information on the libvirt page. If you have performance problems with your bridge device you maybe need to disable the netfilter on the bridge interface.</p>
+<p>原文在来这里：http:&#47;&#47;www.banym.de&#47;linux&#47;centos&#47;setup-bridge-device-on-centos</p>
+<p><&#47;div></p>

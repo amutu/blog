@@ -1,0 +1,30 @@
+---
+layout: post
+status: publish
+published: true
+title: PostgreSQL JDBC设置application_name
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 218
+wordpress_url: http://amutu.com/blog/?p=218
+date: '2013-05-30 23:31:50 +0800'
+date_gmt: '2013-05-30 15:31:50 +0800'
+categories:
+- pgsql
+tags: []
+comments: []
+---
+<p>jdbc的链接属性设置ApplicationName即可。</p>
+<p>在官方的JDBC文档中竟然没有这个说明，一直以为是application_name这个属性，试了很多方式都不成功，最后把官方文档中的jaasApplicationName前面的jaas去掉试试结果成功了。准备报一个bug给社区。</p>
+<p>设置的时候，可以使用url方式如：<br />
+<code lang="java">String url="jdbc:postgresql:&#47;&#47;192.168.1.104&#47;test?user=name&password=xx&ApplicationName=jdbc"<&#47;code><br />
+也可以使用：<br />
+<code lang="java">Properties props = new Properties();<br />
+props.setProperty("ApplicationName",name);<&#47;code><br />
+也可以在链接创建后，使用：<br />
+<code lang="java">Connection.setClientInfo()<&#47;code></p>

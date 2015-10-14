@@ -1,0 +1,31 @@
+---
+layout: post
+status: publish
+published: true
+title: C语言的一个坑：隐式声明的函数默认返回int
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 471
+wordpress_url: http://amutu.com/blog/?p=471
+date: '2014-12-24 00:13:15 +0800'
+date_gmt: '2014-12-23 16:13:15 +0800'
+categories:
+- pgsql
+- freebsd
+tags: []
+comments: []
+---
+<p>今天在FreeBSD下编译Postgres-XC代码，在运行时总是会core掉，gdb跟踪后发现heap_form_tuple返回的指针到caller总是一部分。开始一位是哪里的bug导致stack内存被踩了，定位了半天没发现线索。后来看到<a href="http:&#47;&#47;stackoverflow.com&#47;questions&#47;8029412&#47;c-function-change-value-on-return-corrupted-stack" target="_blank">这个类似的问题<&#47;a>，看了一下clang的编译日志，发现下面这个，才恍然大悟：</p>
+<blockquote><p>1082 cc -DPGXC -g3 -gdwarf-2 -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-stateme nt -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -g -I..&#47;..&#47;..&#47;src&#47;include -c -o pgxc_class.o pgxc_class.c<br />
+1083 pgxc_class.c:81:9: warning: implicit declaration of function 'heap_form_tuple' is invalid in C9 9 [-Wimplicit-function-declaration]<br />
+1084 htup = heap_form_tuple(pgxcclassrel->rd_att, values, nulls);<br />
+1085 ^<br />
+1086 pgxc_class.c:81:7: warning: incompatible integer to pointer conversion assigning to 'HeapTuple' (aka 'struct HeapTupleData *') from 'int' [-Wint-conversion]<br />
+1087 htup = heap_form_tuple(pgxcclassrel->rd_att, values, nulls);<br />
+1088 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<&#47;blockquote><br />
+搞管了c++，java，shell，搞C开发，坑和细枝末节太多了，要时刻小心。</p>

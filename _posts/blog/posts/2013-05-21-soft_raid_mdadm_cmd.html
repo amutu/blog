@@ -1,0 +1,31 @@
+---
+layout: post
+status: publish
+published: true
+title: "软raid管理工具mdadm常见操作"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 196
+wordpress_url: http://amutu.com/blog/?p=196
+date: '2013-05-21 13:49:36 +0800'
+date_gmt: '2013-05-21 05:49:36 +0800'
+categories:
+- linux
+tags: []
+comments: []
+---
+<h1>停止raid设备<&#47;h1><br />
+<code lang="bash">mdadm -S &#47;dev&#47;mdX<&#47;code></p>
+<h1>重新组装并启动raid设备(用在系统重启后)<&#47;h1><br />
+<code lang="bash">mdadm -A &#47;dev&#47;mdX &#47;dev&#47;sd[bcdefghijkl]<&#47;code></p>
+<h1>创建并启动一个带spare的raid10设备<&#47;h1><br />
+<code lang="bash">mdadm --create --verbose &#47;dev&#47;md0 --level=raid10 --raid-devices=10 &#47;dev&#47;sd[bcdefghijk] --spare-devices=1 &#47;dev&#47;sdl<&#47;code></p>
+<h1>销毁raid设备<&#47;h1><br />
+<code lang="bash">mdadm --stop &#47;dev&#47;md0<br />
+mdadm --remove &#47;dev&#47;md0<br />
+mdadm --zero-superblock &#47;dev&#47;sd[bcdefghijkl]<&#47;code></p>

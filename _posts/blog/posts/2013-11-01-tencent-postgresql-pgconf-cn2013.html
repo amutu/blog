@@ -1,0 +1,110 @@
+---
+layout: post
+status: publish
+published: true
+title: "腾讯PostgreSQL应用分享(PGCONF CN2013)"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 376
+wordpress_url: http://amutu.com/blog/?p=376
+date: '2013-11-01 13:47:48 +0800'
+date_gmt: '2013-11-01 05:47:48 +0800'
+categories:
+- pgsql
+tags: []
+comments: []
+---
+
+<p><a href="https:&#47;&#47;wiki.postgresql.org&#47;wiki&#47;Pgconf_cn2013" target="_blank">2013 PostgreSQL中国用户大会<&#47;a>在2013年10月26，27两天在杭州举行，大会聚集了腾讯、斯凯、华为、去哪等国内使用PG的企业，一起分享使用PG的经验，交流遇到的问题。在大会上，我做了题为《腾讯在PG上的应用分享》的分享。在腾讯，PG主要用于数据分析，作为腾讯分布式数据仓库的补充。在分享中，介绍了腾讯分布式数据仓库(TDW)，腾讯基于PostgreSQL的数据服务tPG，以及我们对PG应用未来的一些想法。以下是本次分享的主要内容：</p>
+<p>提纲</p>
+<p> PG在腾讯应用概述</p>
+<p> 基于PG的数据库服务tPG介绍</p>
+<p> PG应用未来规划</p>
+<p>--------------------------------</p>
+<p>PG在腾讯应用概述</p>
+<p> 主要业务场景为OLAP数据分析</p>
+<p> 大部分为内部系统，少量应用于对外服务</p>
+<p> 作为TDW系统的补充而存在</p>
+<p> 主要应用形式为业务使用TDW提供的tPG服务</p>
+<p> TDW团队负责机器、运营和技术支持</p>
+<p> 业务提交申请即可使用</p>
+<p> PG与MySQL</p>
+<p> MySQL可以支撑，则优先使用MySQL</p>
+<p> MySQL不能满足，再考虑使用PG</p>
+<p>--------------------------------</p>
+<p>TDW为什么要引入tPG</p>
+<p> TDW应用推广遇到的挑战</p>
+<p> TDW离线分析，不能满足业务的结果库需求</p>
+<p> TDW没有标准的JDBC、ODBC接口，难以与商业工具对接</p>
+<p> TDW处理小数据、做update和delete效率低</p>
+<p> 解决方案</p>
+<p> TDW不是万能的，不可能满足所有应用场景</p>
+<p> 需要建设一套RDBMS ，作为TDW的补充</p>
+<p>&bull; 要方便用户迁移已有业务，做好有工具做迁移</p>
+<p>&bull; 要有标准的JDBC、ODBC接口</p>
+<p>&bull; 性能要好</p>
+<p>&bull; 功能容易扩展</p>
+<p>--------------------------------</p>
+<p>为什么选择PostgreSQL</p>
+<p> 完善的DB功能</p>
+<p> SQL标准支持较好</p>
+<p> 支持PL&#47;pgSQL等多种过程语言</p>
+<p> 支持视图、分析函数、CTE等高级特性</p>
+<p> OLAP性能超过MySQL</p>
+<p> 复杂SQL性能高10倍+</p>
+<p> 基于cost的SQL优化，调优手段更多</p>
+<p> 部分索引，函数索引，cluster索引</p>
+<p> 插件式的功能扩展</p>
+<p> 已有访问Mysql、Redis、文本等外部数据源插件</p>
+<p> 很容易开发访问TDW的插件</p>
+<p>--------------------------------</p>
+<p>TB级数据库备份与恢复</p>
+<p>基于zfs快照技术</p>
+<p> 速度快，对上TB的数据做快照耗时小于1秒</p>
+<p> 占用空间小，新生成的快照几乎不占空间</p>
+<p> 支持快照增量备份，支持快速rollback</p>
+<p>--------------------------------</p>
+<p>tPG使用的开源插件</p>
+<p> 分区管理：基于pg_partman进行改造</p>
+<p> 监控：check_postgres和pgBadger</p>
+<p> 缓存预热：pgfincore</p>
+<p> 实例间互相访问：dblink</p>
+<p> 读取MySQL数据：mysql_fdw</p>
+<p> 中文全文检索：zhparser</p>
+<p>--------------------------------</p>
+<p>tPG运营现状</p>
+<p> 目前运营情况</p>
+<p> 11套tPG实例 ，共约40台机器</p>
+<p> 已用存储约30TB ，最大实例存储达5TB</p>
+<p> tPG在公司内的用总户数100人+</p>
+<p> 没有因PG本身出过事故，用户评价积极</p>
+<p> 业务类型</p>
+<p> 对外：用户报表</p>
+<p> 对内：TDW系统，30多个业务的报表系统、数据提取系统、 BI系统、营销系统等</p>
+<p>--------------------------------</p>
+<p>Postgres-XC</p>
+<p> PG单机版问题</p>
+<p> 单机版PG存储和计算性能不能扩展</p>
+<p> 管理多个单机版PG ，运维工作量大</p>
+<p> Postgres-XC试用情况</p>
+<p> Pgxc1.1版本，8个datanode节点的集群</p>
+<p> Insert性能比单机低很多，推荐使用copy</p>
+<p> 读性能几乎与节点数成正比</p>
+<p> 在高并发下，GTM成为瓶颈</p>
+<p> 在一些异常情况下，系统表损坏</p>
+<p>--------------------------------</p>
+<p>PG应用未来规划</p>
+<p> 为业务提供集群版PG-XC服务</p>
+<p> 更丰富的应用场景</p>
+<p> 地理信息（PostGis ）</p>
+<p> 机器学习与数据挖掘（Madlib ）</p>
+<p> R统计分析（PL&#47;R ）</p>
+<p> &hellip;</p>
+<p> 接入流程自助化</p>
+<p> 将tPG服务云化，降低运维人工参与量</p>
+<p>演讲内容下载：<a href="http:&#47;&#47;amutu.com&#47;blog&#47;wp-content&#47;uploads&#47;2013&#47;11&#47;腾讯PostgreSQL应用分享.pdf">腾讯PostgreSQL应用分享<&#47;a></p>

@@ -1,0 +1,27 @@
+---
+layout: post
+status: publish
+published: true
+title: "自动生成PostgreSQL的语法帮助信息命令"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 415
+wordpress_url: http://amutu.com/blog/?p=415
+date: '2014-01-20 21:01:38 +0800'
+date_gmt: '2014-01-20 13:01:38 +0800'
+categories:
+- pgsql
+- linux
+tags: []
+comments: []
+---
+<p>1.下载PG源代码</p>
+<p>2.运行configure</p>
+<p>3.进入到src&#47;bin&#47;psql目录下</p>
+<p>4.运行make sql_help.c</p>
+<p>在当前目录下生成的sql_help.c和sql_help.h即是sql帮助信息。被用在psql \h命令中。</p>

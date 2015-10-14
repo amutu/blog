@@ -1,0 +1,48 @@
+---
+layout: post
+status: publish
+published: true
+title: 'PostgreSQL窗口函数ERROR: cannot override frame clause of window xx'
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 352
+wordpress_url: http://amutu.com/blog/?p=352
+date: '2013-08-25 20:15:23 +0800'
+date_gmt: '2013-08-25 12:15:23 +0800'
+categories:
+- pgsql
+tags: []
+comments: []
+---
+
+<p>下面这个SQL会报这个错误：cannot override frame clause of window pkw：</p>
+<p><code lang="sql">select first_value( pk ) OVER ( pkw ) FROM t&nbsp;<br />
+WINDOW pkw AS ( PARTITION BY pk ORDER BY pk RANGE BETWEEN UNBOUNDED&nbsp;<br />
+PRECEDING AND UNBOUNDED FOLLOWING );&nbsp;<&#47;code></p>
+<p>而下面两种写法则不会：</p>
+<p><code lang="sql">select first_value( pk ) OVER ( PARTITION BY pk ORDER BY pk RANGE BETWEEN&nbsp;<br />
+UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING ) FROM t;&nbsp;</p>
+<p>select first_value( pk ) OVER ( pkw ) FROM t&nbsp;<br />
+WINDOW pkw AS ( PARTITION BY pk ORDER BY pk );&nbsp;<&#47;code></p>
+<p>如果把报错SQL微做调整，将OVER后面pkw的括号去掉，则SQL可以正确运行：</p>
+<p><code lang="sql">select first_value( pk ) OVER pkw FROM t&nbsp;<br />
+WINDOW pkw AS ( PARTITION BY pk ORDER BY pk RANGE BETWEEN UNBOUNDED&nbsp;<br />
+PRECEDING AND UNBOUNDED FOLLOWING );&nbsp;<&#47;code></p>
+<p>这是PG的一个bug，在4年前有人报过，Tom Lane的回复是：</p>
+<blockquote><p>It's actually correct: the syntax with parens specifies copying</p>
+<p>and modifying the named WINDOW definition, but you're not allowed to</p>
+<p>copy-and-modify a definition that has a FRAME clause. &nbsp;(Why the spec</p>
+<p>says that is beyond me; replacing the FRAME clause seems sensible</p>
+<p>enough, but ...)&nbsp;</p>
+<p>This isn't terribly well explained in our docs, as far as I can</p>
+<p>find at the moment. &nbsp;The SELECT reference page mentions the rule</p>
+<p>in the context of a dependent WINDOW-clause definition, but</p>
+<p>doesn't explain that OVER with parens acts the same way.</p>
+<p>And maybe the error message wording could be improved.&nbsp;<&#47;blockquote><br />
+目前仍然没有修复，最近这个bug被我遇到了，如果有时间，准备提交一个补丁。</p>
+<p>详细情况可以看<a href="http:&#47;&#47;postgresql.1045698.n5.nabble.com&#47;BUG-5199-Window-frame-clause-wrong-behaviour-td2131492.html" target="_blank">这里<&#47;a>。</p>

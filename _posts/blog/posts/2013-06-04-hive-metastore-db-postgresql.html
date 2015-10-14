@@ -1,0 +1,109 @@
+---
+layout: post
+status: publish
+published: true
+title: "配置HIVE元数据DB为PostgreSQL"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 245
+wordpress_url: http://amutu.com/blog/?p=245
+date: '2013-06-04 18:16:02 +0800'
+date_gmt: '2013-06-04 10:16:02 +0800'
+categories:
+- hive
+- pgsql
+tags: []
+comments: []
+---
+<p>HIVE的元数据默认使用derby作为存储DB，derby作为轻量级的DB，在开发、测试过程中使用比较方便，但是在实际的生产环境中，还需要考虑易用性、容灾、稳定性以及各种监控、运维工具等，这些都是derby缺乏的。MySQL和PostgreSQL是两个比较常用的开源数据库系统，在生产环境中比较多的用来替换derby。配置MySQL在网上的文章比较多，这里不再赘述，本文主要描述配置HIVE元数据DB为PostgreSQL的方法。</p>
+<p>HIVE版本：HIVE 0.7-snapshot，HIVE 0.8-snapshot</p>
+<h1>步骤1：在PG中为元数据增加用户的DB<&#47;h1><br />
+首先在PostgreSQL中为HIVE的元数据建立帐号和DB。</p>
+<p>--以管理员身份登入PG：</p>
+<p><code lang="bash">psql postgres -U postgres<&#47;code></p>
+<p><code lang="sql">--创建用户hive_user:<br />
+Create user hive_user;<br />
+--创建DB metastore_db，owner为hive_user:<br />
+Create database metastore_db with owner=hive_user;<br />
+--设置hive_user的密码：<br />
+\password hive_user<br />
+<&#47;code><br />
+完成以上步骤以后，还要确保PostgreSQL的pg_hba.conf中的配置允许HIVE所在的机器ip可以访问PG。</p>
+<h1>步骤2：下载PG的JDBC驱动<&#47;h1><br />
+在HIVE_HOME目录下创建auxlib目录：</p>
+<p><code lang="bash">mkdir auxlib<&#47;code></p>
+<p>此时HIVE_HOME目录中应该有bin，lib，auxlib，conf等目录。</p>
+<p>下载PG的JDBC驱动</p>
+<p><code lang="bash">wget http:&#47;&#47;jdbc.postgresql.org&#47;download&#47;postgresql-9.0-801.jdbc4.jar<&#47;code></p>
+<p>将下载到的postgresql-9.0-801.jdbc4.jar放到auxlib中。</p>
+<h1>步骤3：修改HIVE配置文件<&#47;h1><br />
+在HIVE_HOME中新建hive-site.xml 文件，内容如下，蓝色字体按照PG server的相关信息进行修改。</p>
+<p><code lang="xml"><!--?xml version="1.0"?--><br />
+<!--?xml-stylesheet type="text&#47;xsl" href="configuration.xsl"?--><br />
+<configuration></p>
+<property>
+<name>javax.jdo.option.ConnectionURL<&#47;name><br />
+<value>jdbc:postgresql:&#47;&#47;pg_server_ip:pg_server_port&#47;metastore_db?<&#47;value><br />
+<description>JDBC connect string for a JDBC metastore<&#47;description><br />
+<&#47;property></p>
+<property>
+<name>javax.jdo.option.ConnectionDriverName<&#47;name><br />
+<value>org.postgresql.Driver<&#47;value><br />
+<description>Driver class name for a JDBC metastore<&#47;description><br />
+<&#47;property></p>
+<property>
+<name>javax.jdo.option.ConnectionUserName<&#47;name><br />
+<value>hive_user<&#47;value><br />
+<description>username to use against metastore database<&#47;description><br />
+<&#47;property></p>
+<property>
+<name>javax.jdo.option.ConnectionPassword<&#47;name><br />
+<value>hive_user_pass<&#47;value><br />
+<description>password to use against metastore database<&#47;description><br />
+<&#47;property></p>
+<p><&#47;configuration><&#47;code></p>
+<h1>步骤4：初始化元数据表<&#47;h1></p>
+<p>元数据库metastore中默认没有表，当HIVE第一次使用某个表的时候，如果发现该表不存在就会自动创建。对derby和mysql，这个过程没有问题，因此derby和mysql作为元数据库不需要这一步。</p>
+<p>PostgreSQL在初始化的时候，会遇到一些问题，导致PG数据库死锁。例如执行以下HIVE语句：</p>
+<p><code lang="sql">Create table kv (key,int,value string) partitioned by (ds string);<br />
+OK<br />
+Alter table kv add partition (ds = '20110101');<&#47;code></p>
+<p>执行这一句的时候，HIVE会一直停在这。</p>
+<p>查看PG数据库，发现有两个连接在进行事务操作，其中一个是：</p>
+<p><idle> in transaction<&#47;idle></p>
+<p>此时处于事务中空闲，另外一个是：</p>
+<p><code lang="sql">ALTER TABLE "PARTITIONS" ADD CONSTRAINT "PARTITIONS_FK1" FOREIGN KEY ("SD_ID") REFERENCES "SDS" ("SD_ID") INITIALLY DEFERRED<&#47;code></p>
+<p>处于等待状态。</p>
+<p>进一步查看日志，发现大致的过程是这样的：</p>
+<p>HIVE发起Alter table kv add partition (ds = '20110101')语句，此时DataNucleus接口发起第一个isolation为SERIALIZABLE的事务，锁定了TBLS等元数据表。在这个的事务进行过程中，DataNucleu发现PARTITIONS等表没有，则要自动创建。于是又发起了另外一个isolation为SERIALIZABLE的事务，第一个事务变为<idle> in transaction。第二个事务创建了PARTITIONS的表后，还要给它增加约束条件，这时，它需要获得它引用的表SDS的排他锁，但这个锁已经被第一个事务拿到了，因此需要等待第一个事务结束。而第一个事务也在等待第二个事务结束。这样就造成了死锁。<&#47;idle></p>
+<p>类似的情况出现在：</p>
+<p><code lang="sql">create test(key int);<br />
+OK<br />
+drop table test;<&#47;code></p>
+<p>当drop table时会去drop它的index，而此时没有index元数据表，它去键，然后产生死锁。</p>
+<p>有三种方法可以解决这个死锁问题：</p>
+<p>第一种方法：</p>
+<p>使用PG的pg_terminate_backend()将第一个事务结束掉，这样可以保证第二个事务完成下去，将元数据表键成功。</p>
+<p>第二种方法：</p>
+<p>使HIVE将创建元数据表的过程和向元数据表中添加数据的过程分离：</p>
+<p><code lang="sql">Create table kv (key,int,value string) partitioned by (ds string);<br />
+OK<br />
+show partitions kv;<br />
+OK<br />
+Alter table kv add partition (ds = '20110101');<br />
+OK<br />
+<&#47;code><br />
+执行以上语句时就不会发生死锁，因为在执行show partitions kv语句时，它是只读语句，不会加锁。当这个语句发现PARTITIONS等表不在时，创建这些表不会发生死锁。</p>
+<p>同样对于index表，使用</p>
+<p><code lang="sql">Show index on kv;<&#47;code></p>
+<p>可以将IDXS表建好。</p>
+<p>第三种方法：</p>
+<p>使用DataNucleu提供的SchemaTool，将HIVE的metastore&#47;src&#47;model&#47;package.jdo文件作为输入，这个工具可以自动创建元数据中的表。具体的使用方法见：</p>
+<p>http:&#47;&#47;www.datanucleus.org&#47;products&#47;accessplatform_2_0&#47;rdbms&#47;schematool.html</p>
+<h1>小结<&#47;h1></p>
+<p>本文给出了使用PostgreSQL作为HIVE元数据DB的配置方法，以及遇到的死锁问题的解决办法，希望对使用HIVE和PostgreSQL的朋友有帮助。</p>

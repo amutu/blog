@@ -1,0 +1,39 @@
+---
+layout: post
+status: publish
+published: true
+title: "使用hadoop-0.20.205在Redhat6上搭建TDW时的注意事项"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 440
+wordpress_url: http://amutu.com/blog/?p=440
+date: '2014-06-22 20:26:12 +0800'
+date_gmt: '2014-06-22 12:26:12 +0800'
+categories:
+- hive
+- hadoop
+- linux
+- big data
+- java
+tags: []
+comments: []
+---
+<br />
+<h1>1.关闭防火墙，以及启动时的防火墙服务<&#47;h1><br />
+关闭防火墙但没有更改启动时rc配置，如果集群中个别机器重启，可能会出现no route to host这样的task错误，最终job可能执行完成，但是会重试很多次，浪费时间和系统资源。</p>
+<p><code lang="bash">service iptables stop<br />
+chkconfig iptables off<&#47;code></p>
+<h1>2.关于hostname设置<&#47;h1><br />
+一开始偷懒，没有用hostname，直接上ip，结果发现在job的页面上，运行task的机器都变成localhost了，没法定位问题。于是把所有机器的hostname设置成hadoop-xx，xx为ip的最后8位的十进制数。</p>
+<div>
+<p><code lang="bash">for i in $(cat iplist); do ssh $i "&#47;bin&#47;echo -e NETWORKING=yes\\\nHOSTNAME=hadoop-$(echo $i | sed 's&#47;192.168.200.&#47;&#47;g') > &#47;etc&#47;sysconfig&#47;network"; done<&#47;code></p>
+<p><&#47;div></p>
+<div>
+<p>同时还要修改&#47;etc&#47;hosts，把hadoop-xx对应的ip加进去。如果windows端浏览器要访问这些host的页面，也需修改windows的hosts文件。</p>
+<p>修改完系统配置后，还要修改hive元数据，hadoop配置，把之前写ip的地方，都替换成hostname。否则，hive在运行时会出现wrong fs的错误。</p>
+<p><&#47;div></p>

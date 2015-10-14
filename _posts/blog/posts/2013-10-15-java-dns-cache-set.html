@@ -1,0 +1,39 @@
+---
+layout: post
+status: publish
+published: true
+title: java DNS缓存控制
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 366
+wordpress_url: http://amutu.com/blog/?p=366
+date: '2013-10-15 11:26:54 +0800'
+date_gmt: '2013-10-15 03:26:54 +0800'
+categories:
+- linux
+- java
+tags: []
+comments: []
+---
+<p>
+最近在测试<a href="http:&#47;&#47;sourceforge.net&#47;apps&#47;mediawiki&#47;postgres-xc&#47;index.php?title=Main_Page" target="_blank">Postgres-XC<&#47;a>，为了让客户端能够将连接分布到多个pgxc的coordinator上，我们使用DNS轮训的方式解析pgxc的域名。</p>
+<p>今天发现是用JDBC在多线程访问pgxc时，dns轮训不起作用，貌似java对dns结果做了缓存。最终定位发现，java确实对dns有缓存机制，可以通过networkaddress.cache.ttl这个参数进行控制。这个参数的单位为秒，具体含义是：</p>
+<ul>
+<li>设置为-1，表示缓存永远有效<&#47;li>
+<li>设置为0，表示不使用缓存<&#47;li>
+<li>设置为n>0，表示缓存有效期为n秒<&#47;li><br />
+<&#47;ul><br />
+默认为永远有效。于此对应的，还有一个dns解析失败的缓存networkaddress.cache.negative.ttl。</p>
+<p>设置方法有三种：</p>
+<p><strong>方法一：<&#47;strong></p>
+<p style="text-align: left; padding-left: 30px;">在${JAVA_HOME}\lib\security\java.security中配置：<&#47;p></p>
+<p style="text-align: left; padding-left: 30px;">networkaddress.cache.ttl=value<&#47;p><br />
+<strong>方法二：<&#47;strong></p>
+<p style="padding-left: 30px;">在jvm启动参数中设置-Dsun.net.inetaddr.ttl=value<&#47;p><br />
+<strong>方法三：<&#47;strong></p>
+<p style="padding-left: 30px;">在代码里设置java.security.Security.setProperty(&rdquo;networkaddress.cache.ttl&rdquo; , &ldquo;value&rdquo;)<&#47;p></p>

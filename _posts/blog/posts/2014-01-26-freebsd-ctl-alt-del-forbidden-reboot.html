@@ -1,0 +1,25 @@
+---
+layout: post
+status: publish
+published: true
+title: freebsd禁止按ctrl+alt+del重启系统
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 418
+wordpress_url: http://amutu.com/blog/?p=418
+date: '2014-01-26 18:00:46 +0800'
+date_gmt: '2014-01-26 10:00:46 +0800'
+categories:
+- freebsd
+tags: []
+comments: []
+---
+<p>运行时设置：</p>
+<p>sysctl hw.syscons.kbd_reboot=0</p>
+<p>持久化设置：</p>
+<p>将修改添加到&#47;etc&#47;sysctl.conf中</p>

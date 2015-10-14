@@ -1,0 +1,50 @@
+---
+layout: post
+status: publish
+published: true
+title: FreeBSD使用ssmtp发Gmail邮件
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 132
+wordpress_url: http://amutu.com/blog/?p=132
+date: '2013-03-10 18:17:36 +0800'
+date_gmt: '2013-03-10 10:17:36 +0800'
+categories:
+- freebsd
+tags: []
+comments: []
+---
+
+<p>因为Sendmail有邮件发送但是发不出时会导致系统启动过程等待超时，浪费时间，因此用sSMTP配合Gmail替换掉Sendmail服务 1,取消Sendmail开机启动，并结束Sendmail进程</p>
+<p style="padding-left: 30px;">sendmail_enable="NO"<&#47;p></p>
+<p style="padding-left: 30px;">sendmail_submit_enable="NO"<&#47;p></p>
+<p style="padding-left: 30px;">sendmail_outbound_enable="NO"<&#47;p></p>
+<p style="padding-left: 30px;">sendmail_msp_queue_enable="NO"<&#47;p><br />
+将这段代码加到&#47;etc&#47;rc.conf中去，下次启动就不会启动Sendmail了结束Sendmail进程</p>
+<p style="padding-left: 30px;">killall &nbsp;sendmail<&#47;p><br />
+并且按照<a href="http:&#47;&#47;www.freebsd.org&#47;doc&#47;handbook&#47;mail-changingmta.html#MAIL-DISABLE-SENDMAIL" target="_blank">http:&#47;&#47;www.freebsd.org&#47;doc&#47;handbook&#47;mail-changingmta.html#MAIL-DISABLE-SENDMAIL<&#47;a>，修改&#47;etc&#47;mail&#47;mailer.conf,修改以下两行：</p>
+<p>sendmail &#47;usr&#47;local&#47;sbin&#47;ssmtp</p>
+<p>send-mail &#47;usr&#47;local&#47;sbin&#47;ssmtp</p>
+<p>2,从Ports安装sSMTP</p>
+<p style="padding-left: 30px;"># cd &#47;usr&#47;ports&#47;mail&#47;ssmtp<&#47;p></p>
+<p style="padding-left: 30px;"># make install replace clean<&#47;p><br />
+3,配置sSMTP 修改&#47;usr&#47;local&#47;etc&#47;ssmtp&#47;ssmtp.conf（没有手动增加就是了）</p>
+<p style="padding-left: 30px;">root=xxx@gmail.com</p>
+<p>mailhub=smtp.gmail.com:587</p>
+<p>rewriteDomain=</p>
+<p>hostname=smtp.gmail.com:587</p>
+<p>FromLineOverride=YES</p>
+<p>UseTLS=YES</p>
+<p>AuthUser=xxx@gmail.com</p>
+<p>AuthPass=yy</p>
+<p>UseSTARTTLS=YES<&#47;p><br />
+4,配置完成发送邮件测试</p>
+<p style="padding-left: 30px;">echo "test" | mail -v -s "test mail" your_mail@domain.com<&#47;p></p>
+<p style="padding-left: 30px;">echo "test" | mail -s "test mail" root<&#47;p><br />
+5,gmail安全设置</p>
+<p>如果第四步出现认证错误，可能的原因是gmail检测到异常ip登陆，这时候需要登陆gmail账号，可能需要填写验证码，或者消除验证码异常的设备登陆，具体情况参见：<a href="https:&#47;&#47;support.google.com&#47;mail&#47;answer&#47;14257?p=client_login&amp;rd=1" target="_blank">https:&#47;&#47;support.google.com&#47;mail&#47;answer&#47;14257?p=client_login&amp;rd=1<&#47;a></p>

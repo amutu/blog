@@ -1,0 +1,158 @@
+---
+layout: post
+status: publish
+published: true
+title: PostgreSQL 9.2特性Recognize self-contradictory restriction clauses for non-table
+  relations
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 20
+wordpress_url: http://amutu.com/blog/?p=20
+date: '2012-10-07 23:57:45 +0800'
+date_gmt: '2012-10-07 15:57:45 +0800'
+categories:
+- pgsql
+tags: []
+comments:
+- id: 68
+  author: Donyell
+  author_email: press@migaa.eu
+  author_url: http://www.yahoo.com/
+  date: '2013-03-22 05:30:26 +0800'
+  date_gmt: '2013-03-21 21:30:26 +0800'
+  content: Artciels like this make life so much simpler.
+---
+<p>在PostgreSQL 9.2.0的<a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;9.2&#47;static&#47;release-9-2.html" target="_blank">Release Note<&#47;a>中的一个特性：</p>
+<blockquote><p>Recognize self-contradictory restriction clauses for non-table relations (Tom Lane)</p>
+<p>This check is only performed when&nbsp;<a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;9.2&#47;static&#47;runtime-config-query.html#GUC-CONSTRAINT-EXCLUSION"><tt>constraint_exclusion<&#47;tt><&#47;a>&nbsp;is&nbsp;<tt>on<&#47;tt>.<&#47;blockquote><br />
+对这个特性，从上面的说明中看，不是很理解，然后找了一下代码库的<a href="http:&#47;&#47;git.postgresql.org&#47;gitweb&#47;?p=postgresql.git;a=commitdiff;h=7741dd6590073719688891898e85f0cb73453159" target="_blank">commit log<&#47;a>：</p>
+<p>The&nbsp;constraint&nbsp;exclusion&nbsp;feature&nbsp;checks&nbsp;for&nbsp;contradictions&nbsp;among&nbsp;scan<br />
+restriction&nbsp;clauses,&nbsp;as&nbsp;well&nbsp;as&nbsp;contradictions&nbsp;between&nbsp;those&nbsp;clauses&nbsp;and&nbsp;a<br />
+table's&nbsp;CHECK&nbsp;constraints.&nbsp;&nbsp;The&nbsp;first&nbsp;aspect&nbsp;of&nbsp;this&nbsp;testing&nbsp;can&nbsp;be&nbsp;useful<br />
+for&nbsp;non-table&nbsp;relations&nbsp;(such&nbsp;as&nbsp;subqueries&nbsp;or&nbsp;functions-in-FROM),&nbsp;but&nbsp;the<br />
+feature&nbsp;was&nbsp;coded&nbsp;with&nbsp;only&nbsp;the&nbsp;CHECK&nbsp;case&nbsp;in&nbsp;mind&nbsp;so&nbsp;we&nbsp;were&nbsp;applying&nbsp;it<br />
+only&nbsp;to&nbsp;plain-table&nbsp;RTEs.&nbsp;&nbsp;Move&nbsp;the&nbsp;relation_excluded_by_constraints&nbsp;call<br />
+so&nbsp;that&nbsp;it&nbsp;is&nbsp;applied&nbsp;to&nbsp;all&nbsp;RTEs&nbsp;not&nbsp;just&nbsp;plain&nbsp;tables.&nbsp;&nbsp;With&nbsp;the&nbsp;default<br />
+setting&nbsp;of&nbsp;constraint_exclusion&nbsp;this&nbsp;results&nbsp;in&nbsp;no&nbsp;extra&nbsp;work,&nbsp;but&nbsp;with<br />
+constraint_exclusion&nbsp;=&nbsp;ON&nbsp;we&nbsp;will&nbsp;detect&nbsp;optimizations&nbsp;that&nbsp;we&nbsp;missed<br />
+before&nbsp;(at&nbsp;the&nbsp;cost&nbsp;of&nbsp;more&nbsp;planner&nbsp;cycles&nbsp;than&nbsp;we&nbsp;expended&nbsp;before).</p>
+<p>Per&nbsp;a&nbsp;gripe&nbsp;from&nbsp;Gunnlaugur&nbsp;&THORN;&oacute;r&nbsp;Briem.&nbsp;&nbsp;Experimentation&nbsp;with<br />
+his&nbsp;example&nbsp;also&nbsp;showed&nbsp;we&nbsp;were&nbsp;not&nbsp;being&nbsp;very&nbsp;bright&nbsp;about&nbsp;the&nbsp;case&nbsp;where<br />
+constraint&nbsp;exclusion&nbsp;is&nbsp;proven&nbsp;within&nbsp;a&nbsp;subquery&nbsp;within&nbsp;UNION&nbsp;ALL,&nbsp;so&nbsp;tweak<br />
+the&nbsp;code&nbsp;to&nbsp;allow&nbsp;set_append_rel_pathlist&nbsp;to&nbsp;recognize&nbsp;such&nbsp;cases.</p>
+<p>大意是说：在查询优化的时候，增加了对table CHECK、where条件中的约束以及subquery中的约束的检查，用以减少对表的扫描。这个功能只在constraint_exclusion&nbsp;=&nbsp;ON的时候开启（默认情况下，constraint_exclusion&nbsp;= &nbsp;PARTITION，所以默认不生效），开启后，优点是对此类SQL进行优化，缺点是增加了所有SQL的plan的生成时间，所以应该根据应用情况，选择性的开启。</p>
+<p>以下是我的一些测试：</p>
+<p>开启开关后，subquery中的过滤条件与外层的过滤条件的交集为空，优化结果是SQL不进行计算，直接返回：<br />
+<code lang="sql"><br />
+test=# set constraint_exclusion to on;<br />
+SET<br />
+test=# explain select * from (select i from generate_series(1,1000000) g(i) where i = -10 ) t where t.i > 10;<br />
+QUERY PLAN<br />
+------------------------------------------<br />
+Result (cost=0.00..0.01 rows=1 width=0)<br />
+One-Time Filter: false<br />
+(2 rows)<br />
+<&#47;code></p>
+<p>恢复开关为默认情况，则会进行计算和扫描：<br />
+<code lang="sql"><br />
+test=# set constraint_exclusion to DEFAULT ;<br />
+SET<br />
+test=# explain select * from (select i from generate_series(1,1000000) g(i) where i = -10 ) t where t.i > 10;<br />
+QUERY PLAN<br />
+-----------------------------------------------------------------------<br />
+Function Scan on generate_series g (cost=0.00..15.00 rows=2 width=4)<br />
+Filter: ((i > 10) AND (i = (-10)))<br />
+(2 rows)<br />
+<&#47;code></p>
+<p>对于同级的过滤条件，如果交集为空，在开关开启的情况下，也会进行优化：<br />
+<code lang="sql"><br />
+test=# set constraint_exclusion to on;<br />
+test=# explain (select * from (select i from generate_series(1,1000000) g(i) ) t where t.i > 10 and t.i < -1) ;<br />
+QUERY PLAN<br />
+------------------------------------------<br />
+Result (cost=0.00..0.01 rows=1 width=0)<br />
+One-Time Filter: false<br />
+(2 rows)</p>
+<p>test=# set constraint_exclusion to DEFAULT ;<br />
+SET<br />
+test=# explain (select * from (select i from generate_series(1,1000000) g(i) ) t where t.i > 10 and t.i < -1) ;<br />
+QUERY PLAN<br />
+-----------------------------------------------------------------------<br />
+Function Scan on generate_series g (cost=0.00..15.00 rows=5 width=4)<br />
+Filter: ((i > 10) AND (i < (-1)))<br />
+(2 rows)<br />
+<&#47;code><br />
+如果过滤条件中有简单的计算表达式，也同样会优化：<br />
+<code lang="sql"><br />
+test=# set constraint_exclusion to DEFAULT ;<br />
+test=# explain (select * from (select i from generate_series(1,1000000) g(i) ) t where t.i > 10+1 and t.i < -1) ;<br />
+QUERY PLAN<br />
+-----------------------------------------------------------------------<br />
+Function Scan on generate_series g (cost=0.00..15.00 rows=5 width=4)<br />
+Filter: ((i > 11) AND (i < (-1)))<br />
+(2 rows)</p>
+<p>test=# set constraint_exclusion to on;<br />
+SET<br />
+test=# explain (select * from (select i from generate_series(1,1000000) g(i) ) t where t.i > 10+1 and t.i < -1) ;<br />
+QUERY PLAN<br />
+------------------------------------------<br />
+Result (cost=0.00..0.01 rows=1 width=0)<br />
+One-Time Filter: false<br />
+(2 rows)<br />
+<&#47;code><br />
+但是对于union all，则测试中发现只进行了部分优化：<br />
+<code lang="sql"><br />
+test=# set constraint_exclusion to on;<br />
+test=# explain (select * from (select i from generate_series(1,1000000) g(i) where i = -10 ) t where t.i > 10) union all (select * from (select i from generate_series(1,1000000) x(i) where i = -10 ) t where t.i < 10);<br />
+QUERY PLAN<br />
+-----------------------------------------------------------------------------------<br />
+Result (cost=0.00..15.02 rows=2 width=4)<br />
+Append (cost=0.00..15.02 rows=2 width=4)<br />
+Function Scan on generate_series x (cost=0.00..15.00 rows=2 width=4)<br />
+Filter: ((i < 10) AND (i = (-10)))<br />
+(4 rows)</p>
+<p>test=# set constraint_exclusion to DEFAULT ;<br />
+SET<br />
+test=# explain (select * from (select i from generate_series(1,1000000) g(i) where i = -10 ) t where t.i > 10) union all (select * from (select i from generate_series(1,1000000) x(i) where i = -10 ) t where t.i < 10);<br />
+QUERY PLAN<br />
+-----------------------------------------------------------------------------------<br />
+Result (cost=0.00..30.04 rows=4 width=4)<br />
+Append (cost=0.00..30.04 rows=4 width=4)<br />
+Function Scan on generate_series g (cost=0.00..15.00 rows=2 width=4)<br />
+Filter: ((i > 10) AND (i = (-10)))<br />
+Function Scan on generate_series x (cost=0.00..15.00 rows=2 width=4)<br />
+Filter: ((i > 10) AND (i = (-10)))<br />
+(6 rows)<br />
+<&#47;code><br />
+对于表的check约束与where条件冲突的情况的优化：<br />
+<code lang="sql"><br />
+test=# create table test(a int check(a < 100));<br />
+CREATE TABLE<br />
+test=# insert INTO test select i from generate_series(1,90) g(i);<br />
+INSERT 0 90<br />
+test=# set constraint_exclusion to DEFAULT ;<br />
+SET<br />
+test=# EXPLAIN select * from test where a > 150;<br />
+QUERY PLAN<br />
+----------------------------------------------------<br />
+Seq Scan on test (cost=0.00..2.12 rows=1 width=4)<br />
+Filter: (a > 150)<br />
+(2 rows)<br />
+test=# set constraint_exclusion to on;<br />
+SET<br />
+test=# EXPLAIN select * from test where a > 150;<br />
+QUERY PLAN<br />
+------------------------------------------<br />
+Result (cost=0.00..0.01 rows=1 width=0)<br />
+One-Time Filter: false<br />
+(2 rows)<br />
+<&#47;code><br />
+总结：<br />
+1.这个特性对于sql中经常有冲突的条件导致表的扫描结果为空有重大优化，这在OLAP中复杂SQL中出现概率比较高，而且OLAP计算的时间一般远高于查询的小号，因此，建议在OLAP或者数据仓库应用中开启这个选项。<br />
+2.对于有union的优化不充分，除此之外，怀疑还有其他情况没有考虑到。<br />
+3.对于check条件有优化。</p>

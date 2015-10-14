@@ -1,0 +1,25 @@
+---
+layout: post
+status: publish
+published: true
+title: PostgreSQL默认编辑器sql语法高亮支持
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 428
+wordpress_url: http://amutu.com/blog/?p=428
+date: '2014-05-01 09:03:21 +0800'
+date_gmt: '2014-05-01 01:03:21 +0800'
+categories:
+- pgsql
+- linux
+tags: []
+comments: []
+---
+<p>将以下设置加入到.bashrc中：</p>
+<p><code lang="bash">export PSQL_EDITOR="vim -c 'set syntax=sql'"<&#47;code></p>
+<p>之后在psql中，使用\e或者\ef时，会启用sql语法高亮。</p>
