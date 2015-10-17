@@ -19,374 +19,374 @@ categories:
 tags: []
 comments: []
 ---
-<h1><span style="font-size: 16px;">Netfilter作为Linux内置的主机防火墙，它可以使用iptables命令处理IPv4协议，也可以使用ip6tables命令处理IPv6协议。在iptables之前，Linux 2.2中使用ipchains来配置防火墙，Linux 2.0中则使用ipfwadm，它基于BSD的ipfw命令实现。<span><h1></p>
+<h1><span style="font-size: 16px;">Netfilter作为Linux内置的主机防火墙，它可以使用iptables命令处理IPv4协议，也可以使用ip6tables命令处理IPv6协议。在iptables之前，Linux 2.2中使用ipchains来配置防火墙，Linux 2.0中则使用ipfwadm，它基于BSD的ipfw命令实现。</span></h1></p>
 <div>
 <p>以下命令在RHEL 6.x上执行通过，但也适用于其他Linux发行版。</p>
-<p><strong>1.显示防火墙的状态<strong></p>
+<p><strong>1.显示防火墙的状态</strong></p>
 <p>以root权限运行下面的命令：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;-n&nbsp;-v<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-L&nbsp;-n&nbsp;-v</li><br />
+</ol><br />
 参数说明：</p>
 <ul>
-<li>-L：列出规则。<li>
-<li>-v：显示详细信息。此选项会显示接口名称、规则选项和TOS掩码，以及封包和字节计数。<li>
-<li>-n：以数字形式显示IP地址和端口，不使用DNS解析。<li><br />
-<ul><br />
+<li>-L：列出规则。</li>
+<li>-v：显示详细信息。此选项会显示接口名称、规则选项和TOS掩码，以及封包和字节计数。</li>
+<li>-n：以数字形式显示IP地址和端口，不使用DNS解析。</li><br />
+</ul><br />
 如果希望输出的结果中显示行号，可以运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;-n&nbsp;-v&nbsp;--line-nmubers<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-L&nbsp;-n&nbsp;-v&nbsp;--line-nmubers</li><br />
+</ol><br />
 这样，就可以按照行号在防火墙中添加、删除规则。</p>
 <p>要显示输入或输出链规则，可以运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-n&nbsp;-v<li>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;-v&nbsp;--line-numbers<li><br />
-<ol><br />
-<strong>2.停止、开启和重启防火墙<strong></p>
-<p>如果你使用的是RHELFedoraCentOS系统，可以运行：</p>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-n&nbsp;-v</li>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;-v&nbsp;--line-numbers</li><br />
+</ol><br />
+<strong>2.停止、开启和重启防火墙</strong></p>
+<p>如果你使用的是RHEL/Fedora/CentOS系统，可以运行：</p>
 <ol>
-<li>#&nbsp;service&nbsp;iptables&nbsp;stop<li>
-<li>#&nbsp;service&nbsp;iptables&nbsp;start<li>
-<li>#&nbsp;service&nbsp;iptables&nbsp;restart<li><br />
-<ol><br />
+<li>#&nbsp;service&nbsp;iptables&nbsp;stop</li>
+<li>#&nbsp;service&nbsp;iptables&nbsp;start</li>
+<li>#&nbsp;service&nbsp;iptables&nbsp;restart</li><br />
+</ol><br />
 我们也可以使用iptables命令停止防火墙并删除所有规则：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-F<li>
-<li>#&nbsp;iptables&nbsp;-X<li>
-<li>#&nbsp;iptables&nbsp;-t&nbsp;nat&nbsp;-F<li>
-<li>#&nbsp;iptables&nbsp;-t&nbsp;nat&nbsp;-X<li>
-<li>#&nbsp;iptables&nbsp;-t&nbsp;mangle&nbsp;-F<li>
-<li>#&nbsp;iptables&nbsp;-t&nbsp;mangle&nbsp;-X<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;INPUT&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;OUTPUT&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;FORWARD&nbsp;ACCEPT<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-F</li>
+<li>#&nbsp;iptables&nbsp;-X</li>
+<li>#&nbsp;iptables&nbsp;-t&nbsp;nat&nbsp;-F</li>
+<li>#&nbsp;iptables&nbsp;-t&nbsp;nat&nbsp;-X</li>
+<li>#&nbsp;iptables&nbsp;-t&nbsp;mangle&nbsp;-F</li>
+<li>#&nbsp;iptables&nbsp;-t&nbsp;mangle&nbsp;-X</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;INPUT&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;OUTPUT&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;FORWARD&nbsp;ACCEPT</li><br />
+</ol><br />
 参数说明：</p>
 <ul>
-<li>-F：删除所有的规则<li>
-<li>-X：删除链<li>
-<li>-t table_name：匹配表（称为nat或mangle）<li>
-<li>-P：设置默认策略（如DROP、REJECT或ACCEPT）<li><br />
-<ul><br />
-<strong>3.删除防火墙规则<strong></p>
+<li>-F：删除所有的规则</li>
+<li>-X：删除链</li>
+<li>-t table_name：匹配表（称为nat或mangle）</li>
+<li>-P：设置默认策略（如DROP、REJECT或ACCEPT）</li><br />
+</ul><br />
+<strong>3.删除防火墙规则</strong></p>
 <p>以带行号的形式显示已有的防火墙规则，请运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-n&nbsp;--line-numbers<li>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;--line-numbers<li>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;--line-numbers&nbsp;|&nbsp;less<li>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;--line-numbers&nbsp;|&nbsp;grep&nbsp;202.54.1.1<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-n&nbsp;--line-numbers</li>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;--line-numbers</li>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;--line-numbers&nbsp;|&nbsp;less</li>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;OUTPUT&nbsp;-n&nbsp;--line-numbers&nbsp;|&nbsp;grep&nbsp;202.54.1.1</li><br />
+</ol><br />
 下面我们使用行号删除规则：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-D&nbsp;INPUT&nbsp;4<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-D&nbsp;INPUT&nbsp;4</li><br />
+</ol><br />
 将IP地址202.54.1.1从规则中删除：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-D&nbsp;INPUT&nbsp;-s&nbsp;202.54.1.1&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-D&nbsp;INPUT&nbsp;-s&nbsp;202.54.1.1&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 参数说明：</p>
 <ul>
-<li>-D：从选择的链中删除一条或多条规则<li><br />
-<ul><br />
-<strong>4.插入防火墙规则<strong></p>
+<li>-D：从选择的链中删除一条或多条规则</li><br />
+</ul><br />
+<strong>4.插入防火墙规则</strong></p>
 <p>首先运行下面的命令：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-n&nbsp;--line-numbers<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-n&nbsp;--line-numbers</li><br />
+</ol><br />
 得到运行结果：</p>
 <ol>
-<li>Chain&nbsp;INPUT&nbsp;(policy&nbsp;DROP)<li>
-<li>num&nbsp;&nbsp;target&nbsp;&nbsp;&nbsp;&nbsp;prot&nbsp;opt&nbsp;source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destination<li>
-<li>1&nbsp;&nbsp;&nbsp;DROP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;202.54.1.1&nbsp;&nbsp;0.0.0.00<li>
-<li>2&nbsp;&nbsp;&nbsp;ACCEPT&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;0.0.0.00&nbsp;&nbsp;&nbsp;&nbsp;0.0.0.00<li><br />
-<ol><br />
+<li>Chain&nbsp;INPUT&nbsp;(policy&nbsp;DROP)</li>
+<li>num&nbsp;&nbsp;target&nbsp;&nbsp;&nbsp;&nbsp;prot&nbsp;opt&nbsp;source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destination</li>
+<li>1&nbsp;&nbsp;&nbsp;DROP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;202.54.1.1&nbsp;&nbsp;0.0.0.0/0</li>
+<li>2&nbsp;&nbsp;&nbsp;ACCEPT&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;0.0.0.0/0&nbsp;&nbsp;&nbsp;&nbsp;0.0.0.0/0</li><br />
+</ol><br />
 在行1和行2之间插入规则：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-I&nbsp;INPUT&nbsp;2&nbsp;-s&nbsp;202.54.1.2&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-I&nbsp;INPUT&nbsp;2&nbsp;-s&nbsp;202.54.1.2&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 查看更新后的规则，会发现插入成功，下面是示例：</p>
 <ol>
-<li>Chain&nbsp;INPUT&nbsp;(policy&nbsp;DROP)<li>
-<li>Num&nbsp;&nbsp;target&nbsp;&nbsp;&nbsp;&nbsp;prot&nbsp;opt&nbsp;source&nbsp;&nbsp;&nbsp;&nbsp;destination<li>
-<li>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DROP&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;202.54.1.1&nbsp;&nbsp;0.0.0.00<li>
-<li>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DROP&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;202.54.1.2&nbsp;&nbsp;0.0.0.00<li>
-<li>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACCEPT&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;0.0.0.00&nbsp;&nbsp;&nbsp;&nbsp;0.0.0.00<li><br />
-<ol><br />
-<strong>5.保存防火墙规则<strong></p>
-<p>在RHELFedoraCentOS Linux下，可以使用下面的命令保存防火墙规则：</p>
+<li>Chain&nbsp;INPUT&nbsp;(policy&nbsp;DROP)</li>
+<li>Num&nbsp;&nbsp;target&nbsp;&nbsp;&nbsp;&nbsp;prot&nbsp;opt&nbsp;source&nbsp;&nbsp;&nbsp;&nbsp;destination</li>
+<li>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DROP&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;202.54.1.1&nbsp;&nbsp;0.0.0.0/0</li>
+<li>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DROP&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;202.54.1.2&nbsp;&nbsp;0.0.0.0/0</li>
+<li>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACCEPT&nbsp;&nbsp;all&nbsp;&nbsp;--&nbsp;&nbsp;0.0.0.0/0&nbsp;&nbsp;&nbsp;&nbsp;0.0.0.0/0</li><br />
+</ol><br />
+<strong>5.保存防火墙规则</strong></p>
+<p>在RHEL/Fedora/CentOS Linux下，可以使用下面的命令保存防火墙规则：</p>
 <ol>
-<li>#&nbsp;service&nbsp;iptables&nbsp;save<li><br />
-<ol><br />
+<li>#&nbsp;service&nbsp;iptables&nbsp;save</li><br />
+</ol><br />
 在其它Linux发行版（如Ubuntu）上，可以使用iptables-save命令保存防火墙规则：</p>
 <ol>
-<li>#&nbsp;iptables-save&nbsp;>&nbsp;rootmy.active.firewall.rules<li>
-<li>#&nbsp;cat&nbsp;rootmy.active.firewall.rules<li><br />
-<ol><br />
-<strong>6.重新加载防火墙规则<strong></p>
+<li>#&nbsp;iptables-save&nbsp;>&nbsp;/root/my.active.firewall.rules</li>
+<li>#&nbsp;cat&nbsp;/root/my.active.firewall.rules</li><br />
+</ol><br />
+<strong>6.重新加载防火墙规则</strong></p>
 <p>我们可以使用iptables-restore命令重新加载使用iptables-save命令保存的防火墙规则：</p>
 <ol>
-<li>#&nbsp;iptables-restore&nbsp;<&nbsp;rootmy.active.firewall.rules<li><br />
-<ol><br />
+<li>#&nbsp;iptables-restore&nbsp;<&nbsp;/root/my.active.firewall.rules</li><br />
+</ol><br />
 我们还可以利用这种特性来快速部署防火墙规则。</p>
-<p><strong>7.设置默认防火墙策略<strong></p>
+<p><strong>7.设置默认防火墙策略</strong></p>
 <p>我们首先来配置一个防火墙策略，它默认丢弃所有的网络数据包：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;INPUT&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;OUTPUT&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;FORWARD&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;-v&nbsp;-n<li>
-<li>#连接失败，因为防火墙丢弃所有的网络数据包<li>
-<li>#&nbsp;ping&nbsp;cyberciti.biz<li>
-<li>#&nbsp;wget&nbsp;http:www.kernel.orgpublinuxkernelv3.0testinglinux-3.2-rc5.tar.bz2<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-P&nbsp;INPUT&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;OUTPUT&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;FORWARD&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;-v&nbsp;-n</li>
+<li>#连接失败，因为防火墙丢弃所有的网络数据包</li>
+<li>#&nbsp;ping&nbsp;cyberciti.biz</li>
+<li>#&nbsp;wget&nbsp;http://www.kernel.org/pub/linux/kernel/v3.0/testing/linux-3.2-rc5.tar.bz2</li><br />
+</ol><br />
 在此基础上，我们只关闭入站连接：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;INPUT&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;FORWARD&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-P&nbsp;OUTPUT&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW,ESTABLISHED&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;-v&nbsp;-n<li>
-<li>#ping和wget可以正常工作<li>
-<li>#&nbsp;ping&nbsp;cyberciti.biz<li>
-<li>#&nbsp;wget&nbsp;http:www.kernel.orgpublinuxkernelv3.0testinglinux-3.2-rc5.tar.bz2<li><br />
-<ol><br />
-<strong>8.在公网网络接口上停用私有网络地址<strong></p>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;INPUT&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;FORWARD&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-P&nbsp;OUTPUT&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW,ESTABLISHED&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-L&nbsp;-v&nbsp;-n</li>
+<li>#ping和wget可以正常工作</li>
+<li>#&nbsp;ping&nbsp;cyberciti.biz</li>
+<li>#&nbsp;wget&nbsp;http://www.kernel.org/pub/linux/kernel/v3.0/testing/linux-3.2-rc5.tar.bz2</li><br />
+</ol><br />
+<strong>8.在公网网络接口上停用私有网络地址</strong></p>
 <p>我们可以从公网网络接口上删除私有IPv4网段，以防止IP欺骗。运行下面的命令，没有源路由地址的数据包会被丢弃：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;192.168.0.024&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.08&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;192.168.0.0/24&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.0/8&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 下面是私有网络IPv4地址范围，请确认在公网接口予以屏蔽：</p>
 <ul>
-<li>10.0.0.08 -j （A）<li>
-<li>172.16.0.012 （B）<li>
-<li>192.168.0.016 （C）<li>
-<li>224.0.0.04 （多播 D）<li>
-<li>240.0.0.05 （E）<li>
-<li>127.0.0.08 （回环）<li><br />
-<ul><br />
-<strong>9.屏蔽IP地址访问<strong></p>
+<li>10.0.0.0/8 -j （A）</li>
+<li>172.16.0.0/12 （B）</li>
+<li>192.168.0.0/16 （C）</li>
+<li>224.0.0.0/4 （多播 D）</li>
+<li>240.0.0.0/5 （E）</li>
+<li>127.0.0.0/8 （回环）</li><br />
+</ul><br />
+<strong>9.屏蔽IP地址访问</strong></p>
 <p>如果我们想屏蔽一个IP地址，比如1.2.3.4，可以运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;1.2.3.4&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.0.024&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
-<strong>10.屏蔽入栈端口请求<strong></p>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;1.2.3.4&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.0.0/24&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
+<strong>10.屏蔽入栈端口请求</strong></p>
 <p>如果我们想80端口上屏蔽所有的服务请求，可以运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 只想屏蔽IP地址1.2.3.4对80端口的请求，可以运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;-s&nbsp;1.2.3.4&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-p&nbsp;tcp&nbsp;-s&nbsp;192.168.1.024&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
-<strong>11.屏蔽出栈IP地址<strong></p>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;-s&nbsp;1.2.3.4&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-p&nbsp;tcp&nbsp;-s&nbsp;192.168.1.0/24&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
+<strong>11.屏蔽出栈IP地址</strong></p>
 <p>现在我们来演示如何屏蔽对主机名和IP地址的出栈访问。</p>
 <p>首先，我们来获取一个域名的IP地址：</p>
 <ol>
-<li>#&nbsp;host&nbsp;-t&nbsp;a&nbsp;cyberciti.biz<li><br />
-<ol><br />
+<li>#&nbsp;host&nbsp;-t&nbsp;a&nbsp;cyberciti.biz</li><br />
+</ol><br />
 输出示例：</p>
 <ol>
-<li>cyberciti.biz&nbsp;has&nbsp;address&nbsp;75.126.153.206<li><br />
-<ol><br />
+<li>cyberciti.biz&nbsp;has&nbsp;address&nbsp;75.126.153.206</li><br />
+</ol><br />
 要屏蔽访问域名cyberciti.biz的网络数据包，可以运行：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-d&nbsp;75.126.153.206&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-d&nbsp;75.126.153.206&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 下面是使用子网掩码的示例：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-d&nbsp;192.168.1.024&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-o&nbsp;eth1&nbsp;-d&nbsp;192.168.1.024&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-d&nbsp;192.168.1.0/24&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-o&nbsp;eth1&nbsp;-d&nbsp;192.168.1.0/24&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 下面我们以屏蔽facebook.com为例，进行说明。首先，我们需要facebook的所有IP地址：</p>
 <ol>
-<li>#&nbsp;host&nbsp;-t&nbsp;a&nbsp;www.facebook.com<li><br />
-<ol><br />
+<li>#&nbsp;host&nbsp;-t&nbsp;a&nbsp;www.facebook.com</li><br />
+</ol><br />
 示例输出：</p>
 <ol>
-<li>www.facebook.com&nbsp;has&nbsp;address&nbsp;69.171.228.40<li><br />
-<ol><br />
+<li>www.facebook.com&nbsp;has&nbsp;address&nbsp;69.171.228.40</li><br />
+</ol><br />
 找出IP地址69.171.228.40的CIDR:</p>
 <ol>
-<li>#&nbsp;whois&nbsp;69.171.228.40&nbsp;|&nbsp;grep&nbsp;CIDR<li><br />
-<ol><br />
+<li>#&nbsp;whois&nbsp;69.171.228.40&nbsp;|&nbsp;grep&nbsp;CIDR</li><br />
+</ol><br />
 示例输出：</p>
 <ol>
-<li>CIDR：69.171.224.019<li><br />
-<ol><br />
+<li>CIDR：69.171.224.0/19</li><br />
+</ol><br />
 现在我们来阻止对facebook.com的访问：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-p&nbsp;tcp&nbsp;-d&nbsp;69.171.224.019&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-p&nbsp;tcp&nbsp;-d&nbsp;69.171.224.0/19&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 我们也可以直接屏蔽域名：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-p&nbsp;tcp&nbsp;-d&nbsp;www.facebook.com&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-p&nbsp;tcp&nbsp;-d&nbsp;facebook.com&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
-<strong>12.记录并丢弃数据包<strong></p>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-p&nbsp;tcp&nbsp;-d&nbsp;www.facebook.com&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;OUTPUT&nbsp;-p&nbsp;tcp&nbsp;-d&nbsp;facebook.com&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
+<strong>12.记录并丢弃数据包</strong></p>
 <p>在公网网络接口上记录并丢弃IP地址欺骗数据包：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.08&nbsp;-j&nbsp;LOG&nbsp;--log-prefix&nbsp;"IP_SPOOF&nbsp;A:&nbsp;"<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.08&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
-默认情况下日志记录在varlogmessages文件中：</p>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.0/8&nbsp;-j&nbsp;LOG&nbsp;--log-prefix&nbsp;"IP_SPOOF&nbsp;A:&nbsp;"</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.0/8&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
+默认情况下日志记录在/var/log/messages文件中：</p>
 <ol>
-<li>#&nbsp;tail&nbsp;-f&nbsp;varlogmessages<li>
-<li>#&nbsp;grep&nbsp;--color&nbsp;'IP&nbsp;SPOOF'&nbsp;varlogmessages<li><br />
-<ol><br />
+<li>#&nbsp;tail&nbsp;-f&nbsp;/var/log/messages</li>
+<li>#&nbsp;grep&nbsp;--color&nbsp;'IP&nbsp;SPOOF'&nbsp;/var/log/messages</li><br />
+</ol><br />
 我们还可以用-m参数对日志记录进行限制，以防止日志文件过度膨胀。</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.08&nbsp;-m&nbsp;limit&nbsp;--limit&nbsp;5m&nbsp;--limit-burst&nbsp;7&nbsp;-j&nbsp;LOG&nbsp;--log-prefix&nbsp;"IP_SPOOF&nbsp;A:&nbsp;"<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.08&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
-<strong>13.根据MAC地址允许或阻止数据包的传入<strong></p>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.0/8&nbsp;-m&nbsp;limit&nbsp;--limit&nbsp;5/m&nbsp;--limit-burst&nbsp;7&nbsp;-j&nbsp;LOG&nbsp;--log-prefix&nbsp;"IP_SPOOF&nbsp;A:&nbsp;"</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-s&nbsp;10.0.0.0/8&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
+<strong>13.根据MAC地址允许或阻止数据包的传入</strong></p>
 <p>我们可以根据MAC地址允许或阻止数据包的传入：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;mac&nbsp;--mac-source&nbsp;00:0F:EA:91:04:08&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
-<strong>14.屏蔽ICMP ping请求<strong></p>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;mac&nbsp;--mac-source&nbsp;00:0F:EA:91:04:08&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
+<strong>14.屏蔽ICMP ping请求</strong></p>
 <p>我们可以通过允许下面的命令屏蔽ping请求：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;DROP<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;DROP</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-i&nbsp;eth1&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 也可以按照特定的网段和主机限制ping请求：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;ACCEPT<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;ACCEPT</li><br />
+</ol><br />
 以下命令只接受受限制的ping请求：</p>
 <ol>
-<li>#假定默认INPUT策略为丢弃数据包<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-reply&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;destination-unreachable&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;time-exceeded&nbsp;-j&nbsp;ACCEPT<li>
-<li>#所有的服务器都对ping请求作出应答<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;ACCEPT<li><br />
-<ol><br />
+<li>#假定默认INPUT策略为丢弃数据包</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-reply&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;destination-unreachable&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;time-exceeded&nbsp;-j&nbsp;ACCEPT</li>
+<li>#所有的服务器都对ping请求作出应答</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;icmp&nbsp;--icmp-type&nbsp;echo-request&nbsp;-j&nbsp;ACCEPT</li><br />
+</ol><br />
 15.开启端口序列</p>
 <p>下面的命令可以允许7000到7010范围内的TCP端口访问：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-m&nbsp;tcp&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;7000:7010&nbsp;-j&nbsp;ACCEPT<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-m&nbsp;tcp&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;7000:7010&nbsp;-j&nbsp;ACCEPT</li><br />
+</ol><br />
 16.允许一系列IP地址访问</p>
 <p>下面的命令可以允许IP地址范围</p>
 <ol>
-<li>#运行IP地址范围192.168.1.100&nbsp;到192.168.1.200&nbsp;访问80端口<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--destination-port&nbsp;80&nbsp;-m&nbsp;iprange&nbsp;--src-range&nbsp;192.168.1.100-192.168.1.200&nbsp;-j&nbsp;ACCEPT<li>
-<li>#NAT示例<li>
-<li>#&nbsp;iptables&nbsp;-t&nbsp;nat&nbsp;-A&nbsp;POSTROUTING&nbsp;-j&nbsp;SNAT&nbsp;--to-source&nbsp;192.168.1.20-192.168.1.25<li><br />
-<ol><br />
+<li>#运行IP地址范围192.168.1.100&nbsp;到192.168.1.200&nbsp;访问80端口</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--destination-port&nbsp;80&nbsp;-m&nbsp;iprange&nbsp;--src-range&nbsp;192.168.1.100-192.168.1.200&nbsp;-j&nbsp;ACCEPT</li>
+<li>#NAT示例</li>
+<li>#&nbsp;iptables&nbsp;-t&nbsp;nat&nbsp;-A&nbsp;POSTROUTING&nbsp;-j&nbsp;SNAT&nbsp;--to-source&nbsp;192.168.1.20-192.168.1.25</li><br />
+</ol><br />
 17.建立连接并重启防火墙</p>
 <p>当重启iptables服务时，它会断开所有已建立的连接。这是因为在重启防火墙时，会卸载IPTABLES_MODULES_UNLOAD模块。</p>
-<p>要解决这个问题，可以编辑etcsysconfigiptables-config</p>
+<p>要解决这个问题，可以编辑/etc/sysconfig/iptables-config</p>
 <ol>
-<li>IPTABLES_MODULES_UNLOAD&nbsp;=&nbsp;no<li><br />
-<ol><br />
+<li>IPTABLES_MODULES_UNLOAD&nbsp;=&nbsp;no</li><br />
+</ol><br />
 18.使用Crit日志级别</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;1.2.3.4&nbsp;-p&nbsp;tcp&nbsp;--destination-port&nbsp;80&nbsp;-j&nbsp;LOG&nbsp;--log-level&nbsp;crit<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;1.2.3.4&nbsp;-p&nbsp;tcp&nbsp;--destination-port&nbsp;80&nbsp;-j&nbsp;LOG&nbsp;--log-level&nbsp;crit</li><br />
+</ol><br />
 19.屏蔽或开启常见端口</p>
 <p>屏蔽或开启常用的TCP、UDP端口：</p>
 <ol>
-<li>#可以使用DROP替换ACCEPT，实现端口屏蔽。<li>
-<li>#打开22端口（SSH）<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-m&nbsp;tcp&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;22&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;22&nbsp;-j&nbsp;ACCEPT<li>
-<li>#打开TCPUDP631端口（打印服务）<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-p&nbsp;udp&nbsp;-m&nbsp;udp&nbsp;--dport&nbsp;631&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-p&nbsp;tcp&nbsp;-m&nbsp;tcp&nbsp;--dport&nbsp;631&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;打开123端口，允许局域网用户进行NTP时间同步<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;udp&nbsp;--dport&nbsp;123&nbsp;-j&nbsp;ACCEPT<li>
-<li>#打开25端口（SMTP）<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;25&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;打开DNS端口<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;udp&nbsp;--dport&nbsp;53&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;53&nbsp;-j&nbsp;ACCEPT<li>
-<li>#打开httphttps端口<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;443&nbsp;-j&nbsp;ACCEPT<li>
-<li>#打开TCP110端口（POP3）<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;110&nbsp;-j&nbsp;ACCEPT<li>
-<li>#打开TCP143端口<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;143&nbsp;-j&nbsp;ACCEPT<li>
-<li>#为局域网用户开启Samba访问<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;137&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;138&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;139&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;445&nbsp;-j&nbsp;ACCEPT<li>
-<li>#为局域网用户开启代理服务器访问<li>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.024&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;3128&nbsp;-j&nbsp;ACCEPT<li>
-<li>#为局域网用户开启MySQL访问<li>
-<li>#&nbsp;iptables&nbsp;-I&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;3306&nbsp;-j&nbsp;ACCEPT<li><br />
-<ol><br />
+<li>#可以使用DROP替换ACCEPT，实现端口屏蔽。</li>
+<li>#打开22端口（SSH）</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-m&nbsp;tcp&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;22&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;22&nbsp;-j&nbsp;ACCEPT</li>
+<li>#打开TCP/UDP631端口（打印服务）</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-p&nbsp;udp&nbsp;-m&nbsp;udp&nbsp;--dport&nbsp;631&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-p&nbsp;tcp&nbsp;-m&nbsp;tcp&nbsp;--dport&nbsp;631&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;打开123端口，允许局域网用户进行NTP时间同步</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;udp&nbsp;--dport&nbsp;123&nbsp;-j&nbsp;ACCEPT</li>
+<li>#打开25端口（SMTP）</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;25&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;打开DNS端口</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;udp&nbsp;--dport&nbsp;53&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;53&nbsp;-j&nbsp;ACCEPT</li>
+<li>#打开http/https端口</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;443&nbsp;-j&nbsp;ACCEPT</li>
+<li>#打开TCP110端口（POP3）</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;110&nbsp;-j&nbsp;ACCEPT</li>
+<li>#打开TCP143端口</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;143&nbsp;-j&nbsp;ACCEPT</li>
+<li>#为局域网用户开启Samba访问</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;137&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;138&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;139&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;445&nbsp;-j&nbsp;ACCEPT</li>
+<li>#为局域网用户开启代理服务器访问</li>
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-s&nbsp;192.168.1.0/24&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;3128&nbsp;-j&nbsp;ACCEPT</li>
+<li>#为局域网用户开启MySQL访问</li>
+<li>#&nbsp;iptables&nbsp;-I&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;3306&nbsp;-j&nbsp;ACCEPT</li><br />
+</ol><br />
 20.限制客户端IP的并发连接数</p>
 <p>我们可以使用connlimit模块限制客户端IP的并发连接数。下面的命令允许每个客户端只能并发3个ssh连接：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--syn&nbsp;--dport&nbsp;22&nbsp;-m&nbsp;connlimit&nbsp;--connlimit-above&nbsp;3&nbsp;-j&nbsp;REJECT<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-p&nbsp;tcp&nbsp;--syn&nbsp;--dport&nbsp;22&nbsp;-m&nbsp;connlimit&nbsp;--connlimit-above&nbsp;3&nbsp;-j&nbsp;REJECT</li><br />
+</ol><br />
 设置HTTP并发连接为20个：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-p&nbsp;tcp&nbsp;--syn&nbsp;--dport&nbsp;80&nbsp;-m&nbsp;connlimit&nbsp;--connlimit-above&nbsp;20&nbsp;--connlimit-mask&nbsp;24&nbsp;-j&nbsp;DROP<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-p&nbsp;tcp&nbsp;--syn&nbsp;--dport&nbsp;80&nbsp;-m&nbsp;connlimit&nbsp;--connlimit-above&nbsp;20&nbsp;--connlimit-mask&nbsp;24&nbsp;-j&nbsp;DROP</li><br />
+</ol><br />
 参数说明：</p>
 <ul>
-<li>--connlimit-above&nbsp;3：连接数超过3个自动匹配<li>
-<li>--connlimit-mask&nbsp;24：子网掩码匹配<li><br />
-<ul><br />
+<li>--connlimit-above&nbsp;3：连接数超过3个自动匹配</li>
+<li>--connlimit-mask&nbsp;24：子网掩码匹配</li><br />
+</ul><br />
 更好的使用iptables</p>
 <p>首先，我们要学会查看man手册：</p>
 <ol>
-<li>$&nbsp;man&nbsp;iptables<li><br />
-<ol><br />
+<li>$&nbsp;man&nbsp;iptables</li><br />
+</ol><br />
 我们还可以这样查看帮助：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-h<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-h</li><br />
+</ol><br />
 我们还可以查看特定命令的帮助：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-j&nbsp;DROP&nbsp;-h<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-j&nbsp;DROP&nbsp;-h</li><br />
+</ol><br />
 测试防火墙</p>
 <p>测试端口是否开放：</p>
 <ol>
-<li>#&nbsp;netstat&nbsp;-tulpn<li><br />
-<ol><br />
+<li>#&nbsp;netstat&nbsp;-tulpn</li><br />
+</ol><br />
 测试TCP&nbsp;80端口是否开放：</p>
 <ol>
-<li>#&nbsp;netstat&nbsp;-tulpn&nbsp;|&nbsp;grep&nbsp;:80<li><br />
-<ol><br />
+<li>#&nbsp;netstat&nbsp;-tulpn&nbsp;|&nbsp;grep&nbsp;:80</li><br />
+</ol><br />
 如果80端口未开放，请确保启动Apache服务器：</p>
 <ol>
-<li>#&nbsp;service&nbsp;httpd&nbsp;start<li><br />
-<ol><br />
+<li>#&nbsp;service&nbsp;httpd&nbsp;start</li><br />
+</ol><br />
 并确保打开iptables防火墙80端口：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-v&nbsp;-n&nbsp;|&nbsp;grep&nbsp;80<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-L&nbsp;INPUT&nbsp;-v&nbsp;-n&nbsp;|&nbsp;grep&nbsp;80</li><br />
+</ol><br />
 如果80端口没有开放，可以运行下面的命令：</p>
 <ol>
-<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;ACCEPT<li>
-<li>#&nbsp;service&nbsp;iptables&nbsp;save<li><br />
-<ol><br />
+<li>#&nbsp;iptables&nbsp;-A&nbsp;INPUT&nbsp;-m&nbsp;state&nbsp;--state&nbsp;NEW&nbsp;-p&nbsp;tcp&nbsp;--dport&nbsp;80&nbsp;-j&nbsp;ACCEPT</li>
+<li>#&nbsp;service&nbsp;iptables&nbsp;save</li><br />
+</ol><br />
 下面使用telnet命令测试是否可以连接到80端口：</p>
 <ol>
-<li>$&nbsp;telnet&nbsp;www.cyberciti.biz&nbsp;80<li><br />
-<ol><br />
+<li>$&nbsp;telnet&nbsp;www.cyberciti.biz&nbsp;80</li><br />
+</ol><br />
 下面是示例输出：</p>
 <ol>
-<li>Trying&nbsp;75.126.153.206...<li>
-<li>Connected&nbsp;to&nbsp;www.cyberciti.biz.<li>
-<li>Escape&nbsp;character&nbsp;is&nbsp;'^]'.<li>
-<li>^]<li>
-<li>telnet>&nbsp;quit<li>
-<li>Connection&nbsp;closed.<li><br />
-<ol><br />
+<li>Trying&nbsp;75.126.153.206...</li>
+<li>Connected&nbsp;to&nbsp;www.cyberciti.biz.</li>
+<li>Escape&nbsp;character&nbsp;is&nbsp;'^]'.</li>
+<li>^]</li>
+<li>telnet>&nbsp;quit</li>
+<li>Connection&nbsp;closed.</li><br />
+</ol><br />
 最后，我们也推荐使用嗅探工具（如tcpdump、ngrep）对防火墙设置进行测试。</p>
-<p>以上只是一些基本的防火墙配置策略，如果你想构造更复杂的防火墙策略，需要对TCPIP和Linux内核配置文件sysctl.conf进行更深入的学习。</p>
-<p><strong>原文链接：<a href="http:www.csdn.netarticle2012-01-17310905">http:www.csdn.netarticle2012-01-17310905<a><strong></p>
-<p><div></p>
+<p>以上只是一些基本的防火墙配置策略，如果你想构造更复杂的防火墙策略，需要对TCP/IP和Linux内核配置文件sysctl.conf进行更深入的学习。</p>
+<p><strong>原文链接：<a href="http://www.csdn.net/article/2012-01-17/310905">http://www.csdn.net/article/2012-01-17/310905</a></strong></p>
+<p></div></p>
