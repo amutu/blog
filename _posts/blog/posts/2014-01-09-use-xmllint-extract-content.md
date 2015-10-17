@@ -24,7 +24,6 @@ comments: []
 ```shell
 $ cat foo.xml
 ```
-<pre>
 ```xml
 <emplist>
 <emp no="1">
@@ -35,7 +34,6 @@ $ cat foo.xml
 </emp>
 </emplist>
 ```
-</pre>
 ```shell
 $ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
 John
