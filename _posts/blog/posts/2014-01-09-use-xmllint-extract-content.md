@@ -21,7 +21,7 @@ comments: []
 ---
 示例代码：
 
-'''xml
+```xml
   $ cat foo.xml
   <emplist>
   <emp no="1">
@@ -33,5 +33,5 @@ comments: []
   </emplist>
   $ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
   John
-'''xml
+```xml
 
