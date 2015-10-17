@@ -35,6 +35,6 @@ $ cat foo.xml
 </emplist>
 ```
 ```shell
-  $ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
-  John
+$ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
+John
 ```
