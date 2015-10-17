@@ -10,38 +10,38 @@ author:
   url: ''
 author_login: amutu
 author_email: zhao6014@gmail.com
-permalink:/zhparser
+permalink:/zhparser.html
 categories: []
 tags: []
 ---
 <br />
-<h1>zhparser是什么<&#47;h1><br />
-<a href="http:&#47;&#47;amutu.com&#47;blog&#47;zhparser" target="_blank">zhparser<&#47;a>是一个<a href="http:&#47;&#47;postgresql.org" target="_blank">PostgreSQL<&#47;a>中文分词的插件，通过它，可以使PostgreSQL支持中文的全文检索（<a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;current&#47;static&#47;textsearch.html" target="_blank">Full Text Search<&#47;a>）。</p>
-<h1>为什么需要zhparser<&#47;h1><br />
+<h1>zhparser是什么<h1><br />
+<a href="http:amutu.comblogzhparser" target="_blank">zhparser<a>是一个<a href="http:postgresql.org" target="_blank">PostgreSQL<a>中文分词的插件，通过它，可以使PostgreSQL支持中文的全文检索（<a href="http:www.postgresql.orgdocscurrentstatictextsearch.html" target="_blank">Full Text Search<a>）。</p>
+<h1>为什么需要zhparser<h1><br />
 一般英语等语言分词比较简单，按照标点、空格切分语句即可获得有含义的词语，PostgreSQL自带的parser就是按照这个原理来分词的，比较简单。而中文就比较复杂，词语之间没有空格分割，长度也不固定，怎么分词有时还跟语句的语义有关，因此PG自带的parser不能用来做中文分词。使用zhparser这个插件，便可以使PG支持中文分词，继而可以使用PG做中文全文检索。</p>
-<h1>zhparser原理是什么<&#47;h1><br />
-zhparser用C语言实现了PostgreSQL <a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;current&#47;static&#47;sql-createtsparser.html" target="_blank">TEXT SEARCH PARSER<&#47;a>需要的接口，这些接口会调用<a href="http:&#47;&#47;www.xunsearch.com&#47;scws&#47;" target="_blank">SCWS<&#47;a>中文分词引擎进行分词。</p>
-<h1>zhparser使用手册<&#47;h1></p>
-<h2>安装zhparser插件<&#47;h2><br />
+<h1>zhparser原理是什么<h1><br />
+zhparser用C语言实现了PostgreSQL <a href="http:www.postgresql.orgdocscurrentstaticsql-createtsparser.html" target="_blank">TEXT SEARCH PARSER<a>需要的接口，这些接口会调用<a href="http:www.xunsearch.comscws" target="_blank">SCWS<a>中文分词引擎进行分词。</p>
+<h1>zhparser使用手册<h1></p>
+<h2>安装zhparser插件<h2><br />
 1.安装SCWS</p>
-<p><code>wget -q -O - http:&#47;&#47;www.xunsearch.com&#47;scws&#47;down&#47;scws-1.2.1.tar.bz2 | tar xjf - cd scws-1.2.1 ;.&#47;configure ; make install <&#47;code></p>
+<p><code>wget -q -O - http:www.xunsearch.comscwsdownscws-1.2.1.tar.bz2 | tar xjf - cd scws-1.2.1 ;.configure ; make install <code></p>
 <p>2.下载zhparser源码</p>
-<p><code> git clone https:&#47;&#47;github.com&#47;amutu&#47;zhparser.git <&#47;code></p>
+<p><code> git clone https:github.comamutuzhparser.git <code></p>
 <p>3.编译和安装zhparser</p>
-<p><code> SCWS_HOME=&#47;usr&#47;local make && make install <&#47;code></p>
-<p><span style="color: #ff0000;">注意：如果在*BSD系统上进行编译安装，请使用gmake代替make<&#47;span></p>
+<p><code> SCWS_HOME=usrlocal make && make install <code></p>
+<p><span style="color: #ff0000;">注意：如果在*BSD系统上进行编译安装，请使用gmake代替make<span></p>
 <p>5.创建extension</p>
-<p><code> psql dbname superuser -c 'CREATE EXTENSION zhparser' <&#47;code></p>
-<h2>使用zhparser进行中文分词<&#47;h2><br />
+<p><code> psql dbname superuser -c 'CREATE EXTENSION zhparser' <code></p>
+<h2>使用zhparser进行中文分词<h2><br />
 TODO</p>
-<h2>使用PostgreSQL进行中文全文检索<&#47;h2><br />
+<h2>使用PostgreSQL进行中文全文检索<h2><br />
 TODO</p>
-<h2>Media WiKi中文全文检索配置<&#47;h2><br />
+<h2>Media WiKi中文全文检索配置<h2><br />
 TODO</p>
-<h2>zhparser高级用法<&#47;h2><br />
-查看SCWS的用法：<a href="http:&#47;&#47;www.xunsearch.com&#47;scws&#47;" target="_blank">SCWS官网<&#47;a></p>
-<h1>zhparser相关链接<&#47;h1><br />
-<a href="http:&#47;&#47;bbs.pgsqldb.com&#47;client&#47;user_msg.php?users_auto_bh=501" target="_blank">阿弟<&#47;a>的文章：<a href="http:&#47;&#47;bbs.pgsqldb.com&#47;client&#47;post_show.php?zt_auto_bh=57895" target="_blank">postgreql实现中文全文搜索的方法之---zhparser<&#47;a></p>
-<p>zhparser源代码github：<a href="https:&#47;&#47;github.com&#47;amutu" target="_blank">https:&#47;&#47;github.com&#47;amutu<&#47;a></p>
-<p>zhparser pgxn主页：<a href="http:&#47;&#47;pgxn.org&#47;dist&#47;zhparser&#47;" target="_blank">http:&#47;&#47;pgxn.org&#47;dist&#47;zhparser&#47;<&#47;a></p>
-<p>PostgreSQL之全文搜索篇-阿第：<a href="http:&#47;&#47;amutu.com&#47;blog&#47;wp-content&#47;uploads&#47;2013&#47;05&#47;postgresql之全文搜索篇.pdf">postgresql之全文搜索篇<&#47;a></p>
+<h2>zhparser高级用法<h2><br />
+查看SCWS的用法：<a href="http:www.xunsearch.comscws" target="_blank">SCWS官网<a></p>
+<h1>zhparser相关链接<h1><br />
+<a href="http:bbs.pgsqldb.comclientuser_msg.php?users_auto_bh=501" target="_blank">阿弟<a>的文章：<a href="http:bbs.pgsqldb.comclientpost_show.php?zt_auto_bh=57895" target="_blank">postgreql实现中文全文搜索的方法之---zhparser<a></p>
+<p>zhparser源代码github：<a href="https:github.comamutu" target="_blank">https:github.comamutu<a></p>
+<p>zhparser pgxn主页：<a href="http:pgxn.orgdistzhparser" target="_blank">http:pgxn.orgdistzhparser<a></p>
+<p>PostgreSQL之全文搜索篇-阿第：<a href="http:amutu.comblogwp-contentuploads201305postgresql之全文搜索篇.pdf">postgresql之全文搜索篇<a></p>
