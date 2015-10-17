@@ -19,16 +19,16 @@ categories:
 tags: []
 comments: []
 ---
-<p>$ cat foo.xml<br />
-<emplist><br />
-<emp no="1"><br />
-<ename>John<ename><br />
-<emp><br />
-<emp no="2"><br />
-<ename>Jack<ename><br />
-<emp><br />
-<emplist><br />
-$ echo 'cat emplistemp[@no="1"]enametext()'|<br />
-xmllint --shell foo.xml |<br />
-sed -n 3p<br />
-John</p>
+`
+$ cat foo.xml
+<emplist>
+<emp no="1">
+<ename>John</ename>
+</emp>
+<emp no="2" />
+<ename>Jack</ename>
+</emp>
+</emplist>
+$ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
+John
+`
