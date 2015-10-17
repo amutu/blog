@@ -19,16 +19,17 @@ categories:
 tags: []
 comments: []
 ---
-`
-$ cat foo.xml
-<emplist>
-<emp no="1">
-<ename>John</ename>
-</emp>
-<emp no="2" />
-<ename>Jack</ename>
-</emp>
-</emplist>
-$ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
-John
-`
+示例代码：  
+
+  $ cat foo.xml
+  <emplist>
+  <emp no="1">
+  <ename>John</ename>
+  </emp>
+  <emp no="2" />
+  <ename>Jack</ename>
+  </emp>
+  </emplist>
+  $ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
+  John
+
