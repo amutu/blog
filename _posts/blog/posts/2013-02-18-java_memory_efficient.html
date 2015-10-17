@@ -21,10 +21,10 @@ comments: []
 ---
 <p>今天在水木java版看到一个讨论java内存使用的帖子，讨论java对象内存使用及overhead，可以看出来java与c、c++相比，在内存使用上还是有一些需要注意的地方。</p>
 <p>以下这段话引用自hunterlee@newsmth在java版的帖子：</p>
-<blockquote><p>java的内存开销比一般人想象的大很多，例如100个entry的TreeMap<Double,Double>82%的内存都是overhead做web开发可能没有太多感觉，但如果跑稍微大规模数据的算法，就会发现这是个很严重的问题。所以我现在都尽量用trove4j这样的库，而不用标准库。<&#47;blockquote><br />
+<blockquote><p>java的内存开销比一般人想象的大很多，例如100个entry的TreeMap<Double,Double>82%的内存都是overhead做web开发可能没有太多感觉，但如果跑稍微大规模数据的算法，就会发现这是个很严重的问题。所以我现在都尽量用trove4j这样的库，而不用标准库。<blockquote><br />
 可以看出来，java复杂对象的内存效率还是挺恐怖的。</p>
 <p>以下两个附件也来自水木上的讨论，供大家参考。</p>
 <p>附1：JAVA对象内存占用示意图：</p>
-<p style="text-align: center;"><a href="http:&#47;&#47;amutu.com&#47;blog&#47;wp-content&#47;uploads&#47;2013&#47;02&#47;java_object_memory.png"><img class="size-large wp-image-117 aligncenter" title="java_object_memory" src="http:&#47;&#47;amutu.com&#47;blog&#47;wp-content&#47;uploads&#47;2013&#47;02&#47;java_object_memory-318x1024.png" alt="java对象内存占用示意图" width="318" height="1024" &#47;><&#47;a><&#47;p></p>
-<p style="text-align: left;">附2：JAVA内存效率手册<&#47;p></p>
-<p style="text-align: left;"><a href="http:&#47;&#47;amutu.com&#47;blog&#47;wp-content&#47;uploads&#47;2013&#47;02&#47;memory-efficient-java-tutorial.pdf">memory-efficient-java-tutorial<&#47;a><&#47;p></p>
+<p style="text-align: center;"><a href="http:amutu.comblogwp-contentuploads201302java_object_memory.png"><img class="size-large wp-image-117 aligncenter" title="java_object_memory" src="http:amutu.comblogwp-contentuploads201302java_object_memory-318x1024.png" alt="java对象内存占用示意图" width="318" height="1024" ><a><p></p>
+<p style="text-align: left;">附2：JAVA内存效率手册<p></p>
+<p style="text-align: left;"><a href="http:amutu.comblogwp-contentuploads201302memory-efficient-java-tutorial.pdf">memory-efficient-java-tutorial<a><p></p>

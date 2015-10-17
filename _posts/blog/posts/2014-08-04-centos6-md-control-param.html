@@ -19,17 +19,17 @@ categories:
 tags: []
 comments: []
 ---
-<p><code lang="bash">echo check > &#47;sys&#47;block&#47;mdX&#47;md&#47;sync_action<br />
-echo repair > &#47;sys&#47;block&#47;mdX&#47;md&#47;sync_action<br />
-echo idle > &#47;sys&#47;block&#47;mdX&#47;md&#47;sync_action</p>
+<p><code lang="bash">echo check > sysblockmdXmdsync_action<br />
+echo repair > sysblockmdXmdsync_action<br />
+echo idle > sysblockmdXmdsync_action</p>
 <p>raid check和sync的最大速度控制：<br />
 sysctl -w dev.raid.speed_limit_max=1000<br />
-echo value > &#47;proc&#47;sys&#47;dev&#47;raid&#47;speed_limit_max<&#47;code></p>
-<p>&#47;etc&#47;cron.d&#47;raid-check控制定期check软raid的频率，&#47;etc&#47;sysconfig&#47;raid-check是它对应的配置。</p>
+echo value > procsysdevraidspeed_limit_max<code></p>
+<p>etccron.draid-check控制定期check软raid的频率，etcsysconfigraid-check是它对应的配置。</p>
 <p>参考链接：</p>
-<p><a href="https:&#47;&#47;raid.wiki.kernel.org&#47;index.php&#47;RAID_Administration" target="_blank">https:&#47;&#47;raid.wiki.kernel.org&#47;index.php&#47;RAID_Administration<&#47;a></p>
-<p><a href="http:&#47;&#47;www.thomas-krenn.com&#47;en&#47;wiki&#47;Mdadm_checkarray" target="_blank">http:&#47;&#47;www.thomas-krenn.com&#47;en&#47;wiki&#47;Mdadm_checkarray<&#47;a></p>
-<p><a href="http:&#47;&#47;wiki.eri.ucsb.edu&#47;sysadm&#47;RAID" target="_blank">http:&#47;&#47;wiki.eri.ucsb.edu&#47;sysadm&#47;RAID<&#47;a></p>
-<p><a href="http:&#47;&#47;www.cyberciti.biz&#47;tips&#47;linux-raid-increase-resync-rebuild-speed.html" target="_blank">http:&#47;&#47;www.cyberciti.biz&#47;tips&#47;linux-raid-increase-resync-rebuild-speed.html<&#47;a></p>
-<p><a href="https:&#47;&#47;www.kernel.org&#47;doc&#47;Documentation&#47;md.txt" target="_blank">https:&#47;&#47;www.kernel.org&#47;doc&#47;Documentation&#47;md.txt<&#47;a></p>
+<p><a href="https:raid.wiki.kernel.orgindex.phpRAID_Administration" target="_blank">https:raid.wiki.kernel.orgindex.phpRAID_Administration<a></p>
+<p><a href="http:www.thomas-krenn.comenwikiMdadm_checkarray" target="_blank">http:www.thomas-krenn.comenwikiMdadm_checkarray<a></p>
+<p><a href="http:wiki.eri.ucsb.edusysadmRAID" target="_blank">http:wiki.eri.ucsb.edusysadmRAID<a></p>
+<p><a href="http:www.cyberciti.biztipslinux-raid-increase-resync-rebuild-speed.html" target="_blank">http:www.cyberciti.biztipslinux-raid-increase-resync-rebuild-speed.html<a></p>
+<p><a href="https:www.kernel.orgdocDocumentationmd.txt" target="_blank">https:www.kernel.orgdocDocumentationmd.txt<a></p>
 <p>man md</p>

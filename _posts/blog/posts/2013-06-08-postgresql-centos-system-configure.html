@@ -21,29 +21,29 @@ tags: []
 comments: []
 ---
 
-<p>PostgreSQL在CentOS上部署的时候，需要设置一些操作系统的参数，官方文档上列举了<a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;current&#47;static&#47;kernel-resources.html" target="_blank">一些<&#47;a>。除了这些，还有一些其他的设置，如单个用户允许的最大进程数，单个进程的最大句柄数等，这些一般也需要调整，否则系统会在一些条件下出现问题，或者性能下降。下面从系统资源限制类和内存参数优化类来进行说明.</p>
-<h1>系统资源限制类<&#47;h1></p>
+<p>PostgreSQL在CentOS上部署的时候，需要设置一些操作系统的参数，官方文档上列举了<a href="http:www.postgresql.orgdocscurrentstatickernel-resources.html" target="_blank">一些<a>。除了这些，还有一些其他的设置，如单个用户允许的最大进程数，单个进程的最大句柄数等，这些一般也需要调整，否则系统会在一些条件下出现问题，或者性能下降。下面从系统资源限制类和内存参数优化类来进行说明.</p>
+<h1>系统资源限制类<h1></p>
 <ul>
-<li><span style="color: #ff0000;">单个用户允许的最大进程数<&#47;span>:linux系统默认是1024,如果PG的最大连接数超过1024,则实际的连接数会小于1024(PG的postmaster进程,checkpointer进程,bgwriter进程,WAL发送进程,日志进程等会占用几个进程数,所以给客户段的连接数会小于1024),超过的连接请求会报资源不够的错误信息.所以为了避免这种情况,需要调整PG的linux用户的可以使用的进程数,一般通过limit.conf进行配置.<&#47;li>
-<li><span style="color: #ff0000;">单个进程可以打开的最大文件数<&#47;span>:linux默认是1024,在SQL很复杂,打开很多表,或者访问很多分区时,会出现句柄数不够的错误.<&#47;li><br />
-<&#47;ul></p>
-<h1>内存参数优化类<&#47;h1></p>
+<li><span style="color: #ff0000;">单个用户允许的最大进程数<span>:linux系统默认是1024,如果PG的最大连接数超过1024,则实际的连接数会小于1024(PG的postmaster进程,checkpointer进程,bgwriter进程,WAL发送进程,日志进程等会占用几个进程数,所以给客户段的连接数会小于1024),超过的连接请求会报资源不够的错误信息.所以为了避免这种情况,需要调整PG的linux用户的可以使用的进程数,一般通过limit.conf进行配置.<li>
+<li><span style="color: #ff0000;">单个进程可以打开的最大文件数<span>:linux默认是1024,在SQL很复杂,打开很多表,或者访问很多分区时,会出现句柄数不够的错误.<li><br />
+<ul></p>
+<h1>内存参数优化类<h1></p>
 <ul>
-<li><span style="color: #ff0000;">vm.dirty_background_ratio<&#47;span>:这个参数控制当系统内存写脏的比例达到多少时,会启动后台进程将buffer刷到磁盘.默认是10%,对于大内存的机器,如超过64G,10%的内存为6.4,一次把6.4G数据写入磁盘,会瞬间产生大量磁盘IO,使系统失去响应,影响其他进程.所以一般8G以上内存的机器,推荐设置为1%.<&#47;li>
-<li><span style="color: #ff0000;">vm.dirty_background_types<&#47;span>:这个参数与上面的类似,只不过这个参数可以设置内存脏掉的绝对值.着两个参数其中一个为0,则另外一个会起作用.<&#47;li><br />
-<&#47;ul><br />
+<li><span style="color: #ff0000;">vm.dirty_background_ratio<span>:这个参数控制当系统内存写脏的比例达到多少时,会启动后台进程将buffer刷到磁盘.默认是10%,对于大内存的机器,如超过64G,10%的内存为6.4,一次把6.4G数据写入磁盘,会瞬间产生大量磁盘IO,使系统失去响应,影响其他进程.所以一般8G以上内存的机器,推荐设置为1%.<li>
+<li><span style="color: #ff0000;">vm.dirty_background_types<span>:这个参数与上面的类似,只不过这个参数可以设置内存脏掉的绝对值.着两个参数其中一个为0,则另外一个会起作用.<li><br />
+<ul><br />
 下面是配置这几个参数的脚本,在CentOS 6.x上测试OK.</p>
 <p><code lang="bash">#limit process to 4096 instead 1024,for we may have 1024+ connections<br />
-echo "postgres        soft    nproc           4096" >> &#47;etc&#47;security&#47;lmits.conf</p>
+echo "postgres        soft    nproc           4096" >> etcsecuritylmits.conf</p>
 <p>#for big query,pg may open more than 1024 files per session<br />
-echo "postgres        hard    nofile          65535" >> &#47;etc&#47;security&#47;limits.conf<br />
-echo "postgres        soft    nofile          65535" >> &#47;etc&#47;security&#47;limits.conf</p>
+echo "postgres        hard    nofile          65535" >> etcsecuritylimits.conf<br />
+echo "postgres        soft    nofile          65535" >> etcsecuritylimits.conf</p>
 <p>#default is 10% of memory,to smooth the io peek value,<br />
 #set this to tune background process flush buffer more frequently<br />
-echo "vm.dirty_background_ratio=0" >> &#47;etc&#47;sysctl.conf<br />
-echo "vm.dirty_background_bytes=1024000000" >> &#47;etc&#47;sysctl.conf</p>
+echo "vm.dirty_background_ratio=0" >> etcsysctl.conf<br />
+echo "vm.dirty_background_bytes=1024000000" >> etcsysctl.conf</p>
 <p>#make the sysctl.conf setting take effect<br />
 sysctl -p</p>
 <p>#make limit to take&nbsp;effect<br />
-&#47;etc&#47;init.d&#47;sshd restart<br />
-<&#47;code></p>
+etcinit.dsshd restart<br />
+<code></p>

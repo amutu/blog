@@ -23,8 +23,8 @@ comments: []
 ---
 <p>今天有同事在配置PostgreSQL为Hive元数据库后，运行Hive SQL时遇到以下报错信息：</p>
 <blockquote><p>Caused by: MetaException(message:Got exception: org.apache.hadoop.hive.metastore.api.MetaException javax.jdo.JDODataStoreException: Error executing JDOQL query "SELECT "THIS"."NAME" AS NUCORDER0 FROM "DBS" "THIS" WHERE (LOWER("THIS"."NAME") LIKE ? ESCAPE '\\' ) ORDER BY NUCORDER0 " : ERROR: invalid escape string<br />
-Hint: Escape string must be empty or one character..<&#47;blockquote><br />
+Hint: Escape string must be empty or one character..<blockquote><br />
 错误信息很清楚，ESCAPE '\\'这里，引号内只能为一个字符，而不能是两个\。解决的办法很简单，将该JDBC用户的连接session属性standard_conforming_strings设置为off即可。</p>
-<p><code lang="sql">alter role xx in database yy set standard_conforming_strings to off;<&#47;code></p>
-<p><strong>错误原因说明<&#47;strong><br />
+<p><code lang="sql">alter role xx in database yy set standard_conforming_strings to off;<code></p>
+<p><strong>错误原因说明<strong><br />
 早期PG普通字符串中的'\'是作为转义字符对待的，所以'\\'最终会认为是'\'。但是这是不符合SQL标准的，所以在PG 9.1及以后，普通字符串中的\不会被任务是转义字符，而E'xx\x'中的\才会被当作是转义字符。为了使以前的代码可以在新的PG版本中运行，便有了standard_conforming_strings这个选项，这个选项默认是on，表示按照SQL标准处理字符串，当设置为off时，按照PG的旧版本处理字符串。</p>

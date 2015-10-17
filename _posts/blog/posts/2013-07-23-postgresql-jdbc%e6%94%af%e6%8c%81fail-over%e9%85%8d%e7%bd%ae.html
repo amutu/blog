@@ -21,11 +21,11 @@ tags: []
 comments: []
 ---
 
-<p>在PostgreSQL JDBC的version 9.2-1000&nbsp;<a href="http:&#47;&#47;jdbc.postgresql.org&#47;changes.html#version_9.2-1000">change log<&#47;a>中可以看到新增了fail over功能的配置：</p>
-<blockquote><p>Implementation of simple connection failover Committed by davec. Thanks to Mikko Tiihonen.<&#47;blockquote><br />
+<p>在PostgreSQL JDBC的version 9.2-1000&nbsp;<a href="http:jdbc.postgresql.orgchanges.html#version_9.2-1000">change log<a>中可以看到新增了fail over功能的配置：</p>
+<blockquote><p>Implementation of simple connection failover Committed by davec. Thanks to Mikko Tiihonen.<blockquote><br />
 今天在PG JDBC的邮件列表中看到有人在问，查了一下pg JDBC文档，发现没有相关的特性，所以把相关的回答信息记录在这里，以备以后查找。</p>
 <p>fail over的JDBC连接串格式：</p>
-<blockquote><p>jdbc:postgresql:&#47;&#47;<span style="color: #ff0000;">host1:port1,host2:port2<&#47;span>&#47;test<&#47;blockquote><br />
+<blockquote><p>jdbc:postgresql:<span style="color: #ff0000;">host1:port1,host2:port2<span>test<blockquote><br />
 这个功能还是不错的，在要求不高的场合，可以使用。</p>
 <p>参考链接：</p>
-<p><a href="http:&#47;&#47;postgresql.1045698.n5.nabble.com&#47;Re-Failover-Datasource-td4496411.html#a5736270" target="_blank">http:&#47;&#47;postgresql.1045698.n5.<wbr>nabble.com&#47;Re-Failover-<wbr>Datasource-td4496411.html#<wbr>a5736270<&#47;wbr><&#47;wbr><&#47;wbr><&#47;a></p>
+<p><a href="http:postgresql.1045698.n5.nabble.comRe-Failover-Datasource-td4496411.html#a5736270" target="_blank">http:postgresql.1045698.n5.<wbr>nabble.comRe-Failover-<wbr>Datasource-td4496411.html#<wbr>a5736270<wbr><wbr><wbr><a></p>

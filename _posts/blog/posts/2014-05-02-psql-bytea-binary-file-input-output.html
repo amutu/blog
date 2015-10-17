@@ -20,47 +20,47 @@ tags: []
 comments: []
 ---
 
-<div>PostgreSQL的客户端工具psql对bytea和二进制文件的输入输出支持支持的并不好，假设用户在使用pg的bytea存放图片等，希望把图片下载下来存为文件，一般要使用编程api。如果非要使用psql客户端，其实也可以实现，只是比较麻烦。<&#47;div></p>
-<div>&nbsp;<&#47;div></p>
-<div>【方式一】<&#47;div></p>
+<div>PostgreSQL的客户端工具psql对bytea和二进制文件的输入输出支持支持的并不好，假设用户在使用pg的bytea存放图片等，希望把图片下载下来存为文件，一般要使用编程api。如果非要使用psql客户端，其实也可以实现，只是比较麻烦。<div></p>
+<div>&nbsp;<div></p>
+<div>【方式一】<div></p>
 <div>
 <p>使用pg_read_binary_file这个函数，可以直接将一个二进制文件读入，返回一个bytea类型。</p>
 <table border="1">
 <tbody>
 <tr>
-<td><tt><code>pg_read_binary_file(<tt>filename<&#47;tt>&nbsp;<tt>text<&#47;tt>&nbsp;[,&nbsp;<tt>offset<&#47;tt>&nbsp;<tt>bigint<&#47;tt>,&nbsp;<tt>length<&#47;tt>&nbsp;<tt>bigint<&#47;tt>])<&#47;code><&#47;tt><&#47;td><br />
-<&#47;tr><br />
-<&#47;tbody><br />
-<&#47;table><br />
-<&#47;div></p>
-<div>但是这种方式有一些限制，使它基本无法使用：<&#47;div></p>
-<div>限制一：所读取的文件，只能是PG Server端PGDATA目录下的文件<&#47;div></p>
-<div>限制二：这个函数需要superuser权限才能调用<&#47;div></p>
-<div>&nbsp;<&#47;div></p>
-<div>【方式二】<&#47;div></p>
-<div>将二进制临时使用base64转为ascii，然后进行相关的操作。如下演示：<&#47;div></p>
-<div>psql读入一个二进制文件为bytea：<&#47;div></p>
-<div>&nbsp;<&#47;div></p>
-<div>bytea_io_test的表定义如下：<&#47;div></p>
+<td><tt><code>pg_read_binary_file(<tt>filename<tt>&nbsp;<tt>text<tt>&nbsp;[,&nbsp;<tt>offset<tt>&nbsp;<tt>bigint<tt>,&nbsp;<tt>length<tt>&nbsp;<tt>bigint<tt>])<code><tt><td><br />
+<tr><br />
+<tbody><br />
+<table><br />
+<div></p>
+<div>但是这种方式有一些限制，使它基本无法使用：<div></p>
+<div>限制一：所读取的文件，只能是PG Server端PGDATA目录下的文件<div></p>
+<div>限制二：这个函数需要superuser权限才能调用<div></p>
+<div>&nbsp;<div></p>
+<div>【方式二】<div></p>
+<div>将二进制临时使用base64转为ascii，然后进行相关的操作。如下演示：<div></p>
+<div>psql读入一个二进制文件为bytea：<div></p>
+<div>&nbsp;<div></p>
+<div>bytea_io_test的表定义如下：<div></p>
 <div>
 <p><code lang="sql">\d bytea_io_test</p>
 <p>Table "public.bytea_io_test"<br />
 Column&nbsp; | Type&nbsp; | Modifiers<br />
 ---------+-------+-----------<br />
-content | bytea |<&#47;code></p>
-<p><&#47;div></p>
-<div>将客户端的一个二进制文件，使用psql插入到表中：<&#47;div><br />
+content | bytea |<code></p>
+<p><div></p>
+<div>将客户端的一个二进制文件，使用psql插入到表中：<div><br />
 <code lang="sql">\set c `base64 xx.tgz`<br />
-insert into bytea_io_test select decode(:'c','base64');<&#47;code></p>
-<div>将表中的一个bytea列，导出为本地一个文件：<&#47;div></p>
+insert into bytea_io_test select decode(:'c','base64');<code></p>
+<div>将表中的一个bytea列，导出为本地一个文件：<div></p>
 <div>
 <p><code lang="sql">\a<br />
 \t<br />
 select encode(content,'base64') as cc from bytea_io_test<br />
-\g | base64 -d > yy.tgz<&#47;code></p>
-<p><&#47;div></p>
-<div>【bytea格式的文本显示问题】<&#47;div></p>
-<div>如果是把一个文本文件存储成为了bytea，用hex看不到文本的内容，而用escape看到的内容会把换行符等转成\xxx这种格式，使用下面的方法，可以将bytea显示成正常的文本格式(这里假定文本编码格式为UTF8，如果是其他编码格式，请替换第二个参数)：<&#47;div></p>
+\g | base64 -d > yy.tgz<code></p>
+<p><div></p>
+<div>【bytea格式的文本显示问题】<div></p>
+<div>如果是把一个文本文件存储成为了bytea，用hex看不到文本的内容，而用escape看到的内容会把换行符等转成\xxx这种格式，使用下面的方法，可以将bytea显示成正常的文本格式(这里假定文本编码格式为UTF8，如果是其他编码格式，请替换第二个参数)：<div></p>
 <div>
-<p><code lang="sql">convert_from(bytea_colunm,'UTF8')<&#47;code></p>
-<p><&#47;div></p>
+<p><code lang="sql">convert_from(bytea_colunm,'UTF8')<code></p>
+<p><div></p>

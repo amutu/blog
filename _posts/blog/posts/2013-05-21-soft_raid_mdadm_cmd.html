@@ -19,13 +19,13 @@ categories:
 tags: []
 comments: []
 ---
-<h1>停止raid设备<&#47;h1><br />
-<code lang="bash">mdadm -S &#47;dev&#47;mdX<&#47;code></p>
-<h1>重新组装并启动raid设备(用在系统重启后)<&#47;h1><br />
-<code lang="bash">mdadm -A &#47;dev&#47;mdX &#47;dev&#47;sd[bcdefghijkl]<&#47;code></p>
-<h1>创建并启动一个带spare的raid10设备<&#47;h1><br />
-<code lang="bash">mdadm --create --verbose &#47;dev&#47;md0 --level=raid10 --raid-devices=10 &#47;dev&#47;sd[bcdefghijk] --spare-devices=1 &#47;dev&#47;sdl<&#47;code></p>
-<h1>销毁raid设备<&#47;h1><br />
-<code lang="bash">mdadm --stop &#47;dev&#47;md0<br />
-mdadm --remove &#47;dev&#47;md0<br />
-mdadm --zero-superblock &#47;dev&#47;sd[bcdefghijkl]<&#47;code></p>
+<h1>停止raid设备<h1><br />
+<code lang="bash">mdadm -S devmdX<code></p>
+<h1>重新组装并启动raid设备(用在系统重启后)<h1><br />
+<code lang="bash">mdadm -A devmdX devsd[bcdefghijkl]<code></p>
+<h1>创建并启动一个带spare的raid10设备<h1><br />
+<code lang="bash">mdadm --create --verbose devmd0 --level=raid10 --raid-devices=10 devsd[bcdefghijk] --spare-devices=1 devsdl<code></p>
+<h1>销毁raid设备<h1><br />
+<code lang="bash">mdadm --stop devmd0<br />
+mdadm --remove devmd0<br />
+mdadm --zero-superblock devsd[bcdefghijkl]<code></p>

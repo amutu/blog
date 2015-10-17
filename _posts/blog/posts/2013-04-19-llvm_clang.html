@@ -21,13 +21,13 @@ tags:
 - clang
 comments: []
 ---
-<p><code lang="bash">wget http:&#47;&#47;llvm.org&#47;releases&#47;3.2&#47;llvm-3.2.src.tar.gz<br />
+<p><code lang="bash">wget http:llvm.orgreleases3.2llvm-3.2.src.tar.gz<br />
 tar xvzf llvm-3.2.src.tar.gz<br />
-cd llvm-3.2.src&#47;tools<br />
-svn co http:&#47;&#47;llvm.org&#47;svn&#47;llvm-project&#47;cfe&#47;tags&#47;RELEASE_32&#47;final&#47; clang<br />
-cd ..&#47;projects<br />
-svn co http:&#47;&#47;llvm.org&#47;svn&#47;llvm-project&#47;compiler-rt&#47;tags&#47;RELEASE_32&#47;final&#47; compiler-rt<br />
+cd llvm-3.2.srctools<br />
+svn co http:llvm.orgsvnllvm-projectcfetagsRELEASE_32final clang<br />
+cd ..projects<br />
+svn co http:llvm.orgsvnllvm-projectcompiler-rttagsRELEASE_32final compiler-rt<br />
 cd ..<br />
-.&#47;configure<br />
+.configure<br />
 make -j4 REQUIRES_RTTI=1<br />
-sudo make install<&#47;code></p>
+sudo make install<code></p>

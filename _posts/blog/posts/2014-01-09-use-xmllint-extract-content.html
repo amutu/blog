@@ -22,13 +22,13 @@ comments: []
 <p>$ cat foo.xml<br />
 <emplist><br />
 <emp no="1"><br />
-<ename>John<&#47;ename><br />
-<&#47;emp><br />
+<ename>John<ename><br />
+<emp><br />
 <emp no="2"><br />
-<ename>Jack<&#47;ename><br />
-<&#47;emp><br />
-<&#47;emplist><br />
-$ echo 'cat &#47;&#47;emplist&#47;emp[@no="1"]&#47;ename&#47;text()'|<br />
+<ename>Jack<ename><br />
+<emp><br />
+<emplist><br />
+$ echo 'cat emplistemp[@no="1"]enametext()'|<br />
 xmllint --shell foo.xml |<br />
 sed -n 3p<br />
 John</p>

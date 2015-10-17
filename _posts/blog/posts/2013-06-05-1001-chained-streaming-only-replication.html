@@ -20,10 +20,10 @@ tags: []
 comments: []
 ---
 
-<p>今天看到一个<a href="http:&#47;&#47;thombrown.blogspot.com&#47;2013&#47;06&#47;1001-chained-streaming-only-replication.html" target="_blank">博文<&#47;a>，讲作者在自己的笔记本上配置了一组PG的主备，其中一台主节点，级联了1000台流式复制的备机。其中有一些数据，可以参考一下：</p>
+<p>今天看到一个<a href="http:thombrown.blogspot.com2013061001-chained-streaming-only-replication.html" target="_blank">博文<a>，讲作者在自己的笔记本上配置了一组PG的主备，其中一台主节点，级联了1000台流式复制的备机。其中有一些数据，可以参考一下：</p>
 <ul>
-<li>从第一台备机promote到第1000个备机感知并恢复服务的时间：<span style="color: #ff0000;">46min，25s<&#47;span>（理论上需要约83min，每个备机感和恢复需要5s）<&#47;li>
-<li>从第一台备机timeline转换到第1000个备机timeline转换花费的时间：<span style="color: #ff0000;">1min，46s<&#47;span><&#47;li>
-<li>主节点数据的改变，传递到第1000个备机话费的时间：<span style="color: #ff0000;">6s<&#47;span><&#47;li><br />
-<&#47;ul><br />
-当然作者的笔记本配有SSD，所以以上数据可能比较乐观。作者提供了测试用的<a href="http:&#47;&#47;darkixion.github.io&#47;pg_rep_test&#47;" target="_blank">脚本<&#47;a>，感兴趣的也可以自己测试一下。</p>
+<li>从第一台备机promote到第1000个备机感知并恢复服务的时间：<span style="color: #ff0000;">46min，25s<span>（理论上需要约83min，每个备机感和恢复需要5s）<li>
+<li>从第一台备机timeline转换到第1000个备机timeline转换花费的时间：<span style="color: #ff0000;">1min，46s<span><li>
+<li>主节点数据的改变，传递到第1000个备机话费的时间：<span style="color: #ff0000;">6s<span><li><br />
+<ul><br />
+当然作者的笔记本配有SSD，所以以上数据可能比较乐观。作者提供了测试用的<a href="http:darkixion.github.iopg_rep_test" target="_blank">脚本<a>，感兴趣的也可以自己测试一下。</p>

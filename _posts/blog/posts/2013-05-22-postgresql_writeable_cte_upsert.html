@@ -2,7 +2,7 @@
 layout: post
 status: publish
 published: true
-title: "使用PostgreSQL Writeable CTE实现upsert(merge&#47;replace)"
+title: "使用PostgreSQL Writeable CTE实现upsert(mergereplace)"
 author:
   display_name: amutu
   login: amutu
@@ -43,11 +43,11 @@ FROM new_values<br />
 WHERE NOT EXISTS (SELECT 1<br />
 FROM upsert up<br />
 WHERE up.id = new_values.id)<br />
-<&#47;code></p>
-<p>原链接：<a href="http:&#47;&#47;stackoverflow.com&#47;questions&#47;1109061&#47;insert-on-duplicate-update-postgresql&#47;8702291#8702291">http:&#47;&#47;stackoverflow.com&#47;questions&#47;1109061&#47;insert-on-duplicate-update-postgresql&#47;8702291#8702291<&#47;a></p>
+<code></p>
+<p>原链接：<a href="http:stackoverflow.comquestions1109061insert-on-duplicate-update-postgresql8702291#8702291">http:stackoverflow.comquestions1109061insert-on-duplicate-update-postgresql8702291#8702291<a></p>
 <p>相关连接：</p>
 <ul>
-<li><a href="http:&#47;&#47;xzilla.net&#47;blog&#47;2011&#47;Mar&#47;Upserting-via-Writeable-CTE.html">Upserting via Writeable CTE<&#47;a><&#47;li>
-<li><a href="http:&#47;&#47;www.depesz.com&#47;index.php&#47;2011&#47;03&#47;16&#47;waiting-for-9-1-writable-cte">WAITING FOR 9.1 &ndash; WRITABLE CTE<&#47;a><&#47;li>
-<li><a href="http:&#47;&#47;www.depesz.com&#47;2012&#47;06&#47;10&#47;why-is-upsert-so-complicated&#47;">WHY IS UPSERT SO COMPLICATED?<&#47;a><&#47;li><br />
-<&#47;ul></p>
+<li><a href="http:xzilla.netblog2011MarUpserting-via-Writeable-CTE.html">Upserting via Writeable CTE<a><li>
+<li><a href="http:www.depesz.comindex.php20110316waiting-for-9-1-writable-cte">WAITING FOR 9.1 &ndash; WRITABLE CTE<a><li>
+<li><a href="http:www.depesz.com20120610why-is-upsert-so-complicated">WHY IS UPSERT SO COMPLICATED?<a><li><br />
+<ul></p>
