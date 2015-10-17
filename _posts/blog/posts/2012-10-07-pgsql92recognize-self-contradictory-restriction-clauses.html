@@ -27,10 +27,10 @@ comments:
   date_gmt: '2013-03-21 21:30:26 +0800'
   content: Artciels like this make life so much simpler.
 ---
-<p>在PostgreSQL 9.2.0的<a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;9.2&#47;static&#47;release-9-2.html" target="_blank">Release Note<&#47;a>中的一个特性：</p>
+<p>在PostgreSQL 9.2.0的<a href="http://www.postgresql.org/docs/9.2/static/release-9-2.html" target="_blank">Release Note</a>中的一个特性：</p>
 <blockquote><p>Recognize self-contradictory restriction clauses for non-table relations (Tom Lane)</p>
-<p>This check is only performed when&nbsp;<a href="http:&#47;&#47;www.postgresql.org&#47;docs&#47;9.2&#47;static&#47;runtime-config-query.html#GUC-CONSTRAINT-EXCLUSION"><tt>constraint_exclusion<&#47;tt><&#47;a>&nbsp;is&nbsp;<tt>on<&#47;tt>.<&#47;blockquote><br />
-对这个特性，从上面的说明中看，不是很理解，然后找了一下代码库的<a href="http:&#47;&#47;git.postgresql.org&#47;gitweb&#47;?p=postgresql.git;a=commitdiff;h=7741dd6590073719688891898e85f0cb73453159" target="_blank">commit log<&#47;a>：</p>
+<p>This check is only performed when&nbsp;<a href="http://www.postgresql.org/docs/9.2/static/runtime-config-query.html#GUC-CONSTRAINT-EXCLUSION"><tt>constraint_exclusion</tt></a>&nbsp;is&nbsp;<tt>on</tt>.</blockquote><br />
+对这个特性，从上面的说明中看，不是很理解，然后找了一下代码库的<a href="http://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=7741dd6590073719688891898e85f0cb73453159" target="_blank">commit log</a>：</p>
 <p>The&nbsp;constraint&nbsp;exclusion&nbsp;feature&nbsp;checks&nbsp;for&nbsp;contradictions&nbsp;among&nbsp;scan<br />
 restriction&nbsp;clauses,&nbsp;as&nbsp;well&nbsp;as&nbsp;contradictions&nbsp;between&nbsp;those&nbsp;clauses&nbsp;and&nbsp;a<br />
 table's&nbsp;CHECK&nbsp;constraints.&nbsp;&nbsp;The&nbsp;first&nbsp;aspect&nbsp;of&nbsp;this&nbsp;testing&nbsp;can&nbsp;be&nbsp;useful<br />
@@ -57,7 +57,7 @@ QUERY PLAN<br />
 Result (cost=0.00..0.01 rows=1 width=0)<br />
 One-Time Filter: false<br />
 (2 rows)<br />
-<&#47;code></p>
+</code></p>
 <p>恢复开关为默认情况，则会进行计算和扫描：<br />
 <code lang="sql"><br />
 test=# set constraint_exclusion to DEFAULT ;<br />
@@ -68,7 +68,7 @@ QUERY PLAN<br />
 Function Scan on generate_series g (cost=0.00..15.00 rows=2 width=4)<br />
 Filter: ((i > 10) AND (i = (-10)))<br />
 (2 rows)<br />
-<&#47;code></p>
+</code></p>
 <p>对于同级的过滤条件，如果交集为空，在开关开启的情况下，也会进行优化：<br />
 <code lang="sql"><br />
 test=# set constraint_exclusion to on;<br />
@@ -86,7 +86,7 @@ QUERY PLAN<br />
 Function Scan on generate_series g (cost=0.00..15.00 rows=5 width=4)<br />
 Filter: ((i > 10) AND (i < (-1)))<br />
 (2 rows)<br />
-<&#47;code><br />
+</code><br />
 如果过滤条件中有简单的计算表达式，也同样会优化：<br />
 <code lang="sql"><br />
 test=# set constraint_exclusion to DEFAULT ;<br />
@@ -104,7 +104,7 @@ QUERY PLAN<br />
 Result (cost=0.00..0.01 rows=1 width=0)<br />
 One-Time Filter: false<br />
 (2 rows)<br />
-<&#47;code><br />
+</code><br />
 但是对于union all，则测试中发现只进行了部分优化：<br />
 <code lang="sql"><br />
 test=# set constraint_exclusion to on;<br />
@@ -128,7 +128,7 @@ Filter: ((i > 10) AND (i = (-10)))<br />
 Function Scan on generate_series x (cost=0.00..15.00 rows=2 width=4)<br />
 Filter: ((i > 10) AND (i = (-10)))<br />
 (6 rows)<br />
-<&#47;code><br />
+</code><br />
 对于表的check约束与where条件冲突的情况的优化：<br />
 <code lang="sql"><br />
 test=# create table test(a int check(a < 100));<br />
@@ -151,7 +151,7 @@ QUERY PLAN<br />
 Result (cost=0.00..0.01 rows=1 width=0)<br />
 One-Time Filter: false<br />
 (2 rows)<br />
-<&#47;code><br />
+</code><br />
 总结：<br />
 1.这个特性对于sql中经常有冲突的条件导致表的扫描结果为空有重大优化，这在OLAP中复杂SQL中出现概率比较高，而且OLAP计算的时间一般远高于查询的小号，因此，建议在OLAP或者数据仓库应用中开启这个选项。<br />
 2.对于有union的优化不充分，除此之外，怀疑还有其他情况没有考虑到。<br />
