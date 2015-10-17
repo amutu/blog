@@ -19,28 +19,28 @@ categories:
 tags: []
 comments: []
 ---
-<h1>简单版<h1></p>
+<h1>简单版</h1></p>
 <ul>
-<li>一般只有sql表达不了的，或者对MapReduce很熟悉且对性能要求非常高的时候，才会使用MapReduce。<li><br />
-<ul></p>
-<h1>啰嗦版<h1></p>
-<h2>开发效率<h2></p>
+<li>一般只有sql表达不了的，或者对MapReduce很熟悉且对性能要求非常高的时候，才会使用MapReduce。</li><br />
+</ul></p>
+<h1>啰嗦版</h1></p>
+<h2>开发效率</h2></p>
 <ul>
-<li><strong>Hive HQL<strong>：HQL语法接近SQL，易于学习和使用，只要懂SQL基本就可以处理海量数据。<li>
-<li><strong>MapReduce<strong>：需要java编程基础，需要理解Hadoop jobtracker、tasktracker，namenode，datanode等概念，需要掌握一些Hadoop的参数，门槛比较高。<li><br />
-<ul></p>
-<h2>性能<h2></p>
+<li><strong>Hive HQL</strong>：HQL语法接近SQL，易于学习和使用，只要懂SQL基本就可以处理海量数据。</li>
+<li><strong>MapReduce</strong>：需要java编程基础，需要理解Hadoop jobtracker、tasktracker，namenode，datanode等概念，需要掌握一些Hadoop的参数，门槛比较高。</li><br />
+</ul></p>
+<h2>性能</h2></p>
 <ul>
-<li><strong>Hive HQL<strong>：HQL最终也是被翻译成MapReduce在Hadoop上执行的，所以它的性能取决于翻译成的MR的代码质量。因为Hive经过长时间的优化，它的MR质量已经很高。并且对于数据倾斜，join算法，group by算法等，都有较好的优化。但是对于精通MapReduce，并且熟悉业务逻辑的人，可能会写出性能比HQL高的MR代码，但是这样的代码通用性不高。Hive为了保证SQL算子的通用性，可能会牺牲一些效率。通常Hive的MR，已经比大多数人写的MR代码效率高了。<li>
-<li><strong>MapReduce<strong>：对MapReduce编程熟悉，并且熟悉数据和业务逻辑，可能会写出比Hive HQL性能高很多的MR。<li><br />
-<ul></p>
-<h2>功能<h2></p>
+<li><strong>Hive HQL</strong>：HQL最终也是被翻译成MapReduce在Hadoop上执行的，所以它的性能取决于翻译成的MR的代码质量。因为Hive经过长时间的优化，它的MR质量已经很高。并且对于数据倾斜，join算法，group by算法等，都有较好的优化。但是对于精通MapReduce，并且熟悉业务逻辑的人，可能会写出性能比HQL高的MR代码，但是这样的代码通用性不高。Hive为了保证SQL算子的通用性，可能会牺牲一些效率。通常Hive的MR，已经比大多数人写的MR代码效率高了。</li>
+<li><strong>MapReduce</strong>：对MapReduce编程熟悉，并且熟悉数据和业务逻辑，可能会写出比Hive HQL性能高很多的MR。</li><br />
+</ul></p>
+<h2>功能</h2></p>
 <ul>
-<li><strong>Hive HQL<strong>：支持结构化数据和一些非结构化数据（Hive支持自定义SerDe和MR transform，可以处理一些非结构化数据），业务逻辑要能够用SQL表达。<li>
-<li><strong>MapReduce<strong>：支持结构化和非结构化数据，算法可以更灵活，可以做迭代运算，数据挖掘等。<li><br />
-<ul></p>
-<h2>可维护性<h2></p>
+<li><strong>Hive HQL</strong>：支持结构化数据和一些非结构化数据（Hive支持自定义SerDe和MR transform，可以处理一些非结构化数据），业务逻辑要能够用SQL表达。</li>
+<li><strong>MapReduce</strong>：支持结构化和非结构化数据，算法可以更灵活，可以做迭代运算，数据挖掘等。</li><br />
+</ul></p>
+<h2>可维护性</h2></p>
 <ul>
-<li><strong>Hive HQL<strong>：数据结构和业务逻辑变更，都只需要SQL层的改变，维护方便。<li>
-<li><strong>MapReduce<strong>：数据结构或业务逻辑的变更，都需要改写java代码、编译、调试等步骤，维护比较麻烦。<li><br />
-<ul></p>
+<li><strong>Hive HQL</strong>：数据结构和业务逻辑变更，都只需要SQL层的改变，维护方便。</li>
+<li><strong>MapReduce</strong>：数据结构或业务逻辑的变更，都需要改写java代码、编译、调试等步骤，维护比较麻烦。</li><br />
+</ul></p>

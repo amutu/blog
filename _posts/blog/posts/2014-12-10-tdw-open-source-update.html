@@ -22,18 +22,18 @@ comments: []
 
 <p>TDW对外开源的代码昨天更新了，更新至内部最新稳定版本。这个版本包含大量的bug修复和新功能，这里主要列举一下主要的新功能：</p>
 <ul>
-<li>TDW QE支持hadoop 2.2.0版本<li>
-<li>将客户端ip，端口，当前SQL的默认DB写入tdw_query_info_new表中<li>
-<li>将运行SQL的报错信息写入tdw_query_error_info表中<li>
-<li>protobuf默认版本升级至2.5.0<li>
-<li>新增AES加密的UDF<li>
-<li>新增两个解析XML的UDF<li>
-<li>新增posexplode UDF<li>
-<li>新增str_hash_bigint UDF<li>
-<li>新增get_main_domain UDF<li><br />
-<ul><br />
+<li>TDW QE支持hadoop 2.2.0版本</li>
+<li>将客户端ip，端口，当前SQL的默认DB写入tdw_query_info_new表中</li>
+<li>将运行SQL的报错信息写入tdw_query_error_info表中</li>
+<li>protobuf默认版本升级至2.5.0</li>
+<li>新增AES加密的UDF</li>
+<li>新增两个解析XML的UDF</li>
+<li>新增posexplode UDF</li>
+<li>新增str_hash_bigint UDF</li>
+<li>新增get_main_domain UDF</li><br />
+</ul><br />
 在过去一段时间，TDW将现网默认的分区类型，从list分区改为range分区，以方便进行元数据和数据合并，进而提升hdfs raid的节约存储效果。因此，range分区的功能，性能大大增强。</p>
 <p>另外一个增强是rcfile。之前TDW现网默认使用我们自己研发的format存储结构，目前转换成了rcfile。在未来，我们将默认使用rcfile作为默认存储。rcfile引入已经有一年多，期间灰度修复大量bug，目前已经足够稳定。</p>
-<p>TDW开源代码仓库：<a href="https:code.csdn.netTencenttdw">https:code.csdn.netTencenttdw<a></p>
-<p>github镜像：<a href="https:github.comamututdw">https:github.comamututdw<a></p>
-<p>交流反馈：<a href="https:groups.google.comdforumtdw-user" rel="nofollow" target="_blank">https:groups.google.comdforumtdw-user<a></p>
+<p>TDW开源代码仓库：<a href="https://code.csdn.net/Tencent/tdw">https://code.csdn.net/Tencent/tdw</a></p>
+<p>github镜像：<a href="https://github.com/amutu/tdw">https://github.com/amutu/tdw</a></p>
+<p>交流反馈：<a href="https://groups.google.com/d/forum/tdw-user" rel="nofollow" target="_blank">https://groups.google.com/d/forum/tdw-user</a></p>

@@ -2,7 +2,7 @@
 layout: post
 status: publish
 published: true
-title: "使用PostgreSQL C#.Net接口Npgsql乱码问题解决"
+title: "使用PostgreSQL C#/.Net接口Npgsql乱码问题解决"
 author:
   display_name: amutu
   login: amutu
@@ -33,14 +33,14 @@ comments:
   date_gmt: '2013-05-23 14:53:21 +0800'
   content: "感谢分享！超级赞！"
 ---
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">PostgreSQL Server端数据存储中文一般使用编码为UTF-8，因此，客户端如果是UTF-8编码，则不会出现乱码问题。绝大多数PostgreSQL的客户端库(例如jdbc、基于libpq的库)会比较智能的感知客户端的编码，然后将数据进行正确的转换后发送给客户端。<p></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">而Npgsql这个接口比较特殊，不能正确的自动设置客户端编码，在连接选项中也不能设置encoding，所以会导致中文乱码产生。这时候可以通过下面的方法进行操作：<p></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><span style="color: #0000ff;">在PostgreSQL中，设置此用户名对此DB的连接选项的client_encoding强制为GBK编码<span><p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">PostgreSQL Server端数据存储中文一般使用编码为UTF-8，因此，客户端如果是UTF-8编码，则不会出现乱码问题。绝大多数PostgreSQL的客户端库(例如jdbc、基于libpq的库)会比较智能的感知客户端的编码，然后将数据进行正确的转换后发送给客户端。</p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">而Npgsql这个接口比较特殊，不能正确的自动设置客户端编码，在连接选项中也不能设置encoding，所以会导致中文乱码产生。这时候可以通过下面的方法进行操作：</p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><span style="color: #0000ff;">在PostgreSQL中，设置此用户名对此DB的连接选项的client_encoding强制为GBK编码</span></p></p>
 <blockquote>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><span style="color: #0000ff;">alter role <your name> in database <your database> set client_encoding to 'GBK';<span><p><br />
-<blockquote></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">这个设置只在指定的用户连接指定的DB时生效，如果想让它对所有用户所有DB生效，可以在postgresql.conf中修改client_encoding这个配置。<p></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><p></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><strong>参考连接<strong><p></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">pgsql中设置参数的方法：<a href="http:www.postgresql.orgdocs9.2staticconfig-setting.html#CONFIG-SETTING-OTHER-METHODS">http:www.postgresql.orgdocs9.2staticconfig-setting.html#CONFIG-SETTING-OTHER-METHODS<a><p></p>
-<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">alter role:<a href="http:www.postgresql.orgdocs9.2staticsql-alterrole.html">http:www.postgresql.orgdocs9.2staticsql-alterrole.html<a><p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><span style="color: #0000ff;">alter role <your name> in database <your database> set client_encoding to 'GBK';</span></p><br />
+</blockquote></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">这个设置只在指定的用户连接指定的DB时生效，如果想让它对所有用户所有DB生效，可以在postgresql.conf中修改client_encoding这个配置。</p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"></p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;"><strong>参考连接</strong></p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">pgsql中设置参数的方法：<a href="http://www.postgresql.org/docs/9.2/static/config-setting.html#CONFIG-SETTING-OTHER-METHODS">http://www.postgresql.org/docs/9.2/static/config-setting.html#CONFIG-SETTING-OTHER-METHODS</a></p></p>
+<p style="margin-top: 0.4em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; line-height: 1.5em;">alter role:<a href="http://www.postgresql.org/docs/9.2/static/sql-alterrole.html">http://www.postgresql.org/docs/9.2/static/sql-alterrole.html</a></p></p>

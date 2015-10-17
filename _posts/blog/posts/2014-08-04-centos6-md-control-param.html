@@ -19,17 +19,17 @@ categories:
 tags: []
 comments: []
 ---
-<p><code lang="bash">echo check > sysblockmdXmdsync_action<br />
-echo repair > sysblockmdXmdsync_action<br />
-echo idle > sysblockmdXmdsync_action</p>
+<p><code lang="bash">echo check > /sys/block/mdX/md/sync_action<br />
+echo repair > /sys/block/mdX/md/sync_action<br />
+echo idle > /sys/block/mdX/md/sync_action</p>
 <p>raid check和sync的最大速度控制：<br />
 sysctl -w dev.raid.speed_limit_max=1000<br />
-echo value > procsysdevraidspeed_limit_max<code></p>
-<p>etccron.draid-check控制定期check软raid的频率，etcsysconfigraid-check是它对应的配置。</p>
+echo value > /proc/sys/dev/raid/speed_limit_max</code></p>
+<p>/etc/cron.d/raid-check控制定期check软raid的频率，/etc/sysconfig/raid-check是它对应的配置。</p>
 <p>参考链接：</p>
-<p><a href="https:raid.wiki.kernel.orgindex.phpRAID_Administration" target="_blank">https:raid.wiki.kernel.orgindex.phpRAID_Administration<a></p>
-<p><a href="http:www.thomas-krenn.comenwikiMdadm_checkarray" target="_blank">http:www.thomas-krenn.comenwikiMdadm_checkarray<a></p>
-<p><a href="http:wiki.eri.ucsb.edusysadmRAID" target="_blank">http:wiki.eri.ucsb.edusysadmRAID<a></p>
-<p><a href="http:www.cyberciti.biztipslinux-raid-increase-resync-rebuild-speed.html" target="_blank">http:www.cyberciti.biztipslinux-raid-increase-resync-rebuild-speed.html<a></p>
-<p><a href="https:www.kernel.orgdocDocumentationmd.txt" target="_blank">https:www.kernel.orgdocDocumentationmd.txt<a></p>
+<p><a href="https://raid.wiki.kernel.org/index.php/RAID_Administration" target="_blank">https://raid.wiki.kernel.org/index.php/RAID_Administration</a></p>
+<p><a href="http://www.thomas-krenn.com/en/wiki/Mdadm_checkarray" target="_blank">http://www.thomas-krenn.com/en/wiki/Mdadm_checkarray</a></p>
+<p><a href="http://wiki.eri.ucsb.edu/sysadm/RAID" target="_blank">http://wiki.eri.ucsb.edu/sysadm/RAID</a></p>
+<p><a href="http://www.cyberciti.biz/tips/linux-raid-increase-resync-rebuild-speed.html" target="_blank">http://www.cyberciti.biz/tips/linux-raid-increase-resync-rebuild-speed.html</a></p>
+<p><a href="https://www.kernel.org/doc/Documentation/md.txt" target="_blank">https://www.kernel.org/doc/Documentation/md.txt</a></p>
 <p>man md</p>

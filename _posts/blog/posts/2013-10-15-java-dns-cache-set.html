@@ -21,19 +21,19 @@ tags: []
 comments: []
 ---
 <p>
-最近在测试<a href="http:sourceforge.netappsmediawikipostgres-xcindex.php?title=Main_Page" target="_blank">Postgres-XC<a>，为了让客户端能够将连接分布到多个pgxc的coordinator上，我们使用DNS轮训的方式解析pgxc的域名。</p>
+最近在测试<a href="http://sourceforge.net/apps/mediawiki/postgres-xc/index.php?title=Main_Page" target="_blank">Postgres-XC</a>，为了让客户端能够将连接分布到多个pgxc的coordinator上，我们使用DNS轮训的方式解析pgxc的域名。</p>
 <p>今天发现是用JDBC在多线程访问pgxc时，dns轮训不起作用，貌似java对dns结果做了缓存。最终定位发现，java确实对dns有缓存机制，可以通过networkaddress.cache.ttl这个参数进行控制。这个参数的单位为秒，具体含义是：</p>
 <ul>
-<li>设置为-1，表示缓存永远有效<li>
-<li>设置为0，表示不使用缓存<li>
-<li>设置为n>0，表示缓存有效期为n秒<li><br />
-<ul><br />
+<li>设置为-1，表示缓存永远有效</li>
+<li>设置为0，表示不使用缓存</li>
+<li>设置为n>0，表示缓存有效期为n秒</li><br />
+</ul><br />
 默认为永远有效。于此对应的，还有一个dns解析失败的缓存networkaddress.cache.negative.ttl。</p>
 <p>设置方法有三种：</p>
-<p><strong>方法一：<strong></p>
-<p style="text-align: left; padding-left: 30px;">在${JAVA_HOME}\lib\security\java.security中配置：<p></p>
-<p style="text-align: left; padding-left: 30px;">networkaddress.cache.ttl=value<p><br />
-<strong>方法二：<strong></p>
-<p style="padding-left: 30px;">在jvm启动参数中设置-Dsun.net.inetaddr.ttl=value<p><br />
-<strong>方法三：<strong></p>
-<p style="padding-left: 30px;">在代码里设置java.security.Security.setProperty(&rdquo;networkaddress.cache.ttl&rdquo; , &ldquo;value&rdquo;)<p></p>
+<p><strong>方法一：</strong></p>
+<p style="text-align: left; padding-left: 30px;">在${JAVA_HOME}\lib\security\java.security中配置：</p></p>
+<p style="text-align: left; padding-left: 30px;">networkaddress.cache.ttl=value</p><br />
+<strong>方法二：</strong></p>
+<p style="padding-left: 30px;">在jvm启动参数中设置-Dsun.net.inetaddr.ttl=value</p><br />
+<strong>方法三：</strong></p>
+<p style="padding-left: 30px;">在代码里设置java.security.Security.setProperty(&rdquo;networkaddress.cache.ttl&rdquo; , &ldquo;value&rdquo;)</p></p>

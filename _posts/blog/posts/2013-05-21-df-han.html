@@ -21,9 +21,9 @@ comments: []
 ---
 <p>我们在PostgreSQL机器上都会监控它的磁盘使用情况，其中一项是通过df检查磁盘的使用率。今天发现一台机器运行良好，但是负载达到5k多，pstree看了一下，df进程有有5k多个，自己运行了一下df命令，会卡住。系统上5k多个df，应该是监控卡了一段时间。</p>
 <p>使用strace df命令，输出如下：<br />
-<code lang="bash">statfs("procsysfsbinfmt_misc", {f_type=0x42494e4d, f_bsize=4096, f_blocks=0, f_bfree=0, f_bavail=0, f_files=0, f_ffree=0, f_fsid={0, 0}, f_namelen=255, f_frsize=4096}) = 0<br />
-statfs("mnt",  <unfinished ...>;<code><br />
-看来是卡在了mnt这里。这时才想到这个机器过载的nfs搬迁到了新的地方，应该是卡在了nfs请求的地方。运行<br />
-<code lang="bash">umount -f mnt<br />
-killall -9 df<code><br />
+<code lang="bash">statfs("/proc/sys/fs/binfmt_misc", {f_type=0x42494e4d, f_bsize=4096, f_blocks=0, f_bfree=0, f_bavail=0, f_files=0, f_ffree=0, f_fsid={0, 0}, f_namelen=255, f_frsize=4096}) = 0<br />
+statfs("/mnt",  <unfinished ...>;</code><br />
+看来是卡在了/mnt这里。这时才想到这个机器过载的nfs搬迁到了新的地方，应该是卡在了nfs请求的地方。运行<br />
+<code lang="bash">umount -f /mnt<br />
+killall -9 df</code><br />
 后恢复。</p>

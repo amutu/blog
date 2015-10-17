@@ -22,11 +22,11 @@ comments: []
 ---
 
 <p>pg_toast_2619这个表是pg_statistic系统表的toast扩展表，如果PG报错如下：</p>
-<blockquote><p>ERROR: &nbsp;unexpected chunk number 1 (expected 0) for toast value 16703 in pg_toast_2619<blockquote><br />
+<blockquote><p>ERROR: &nbsp;unexpected chunk number 1 (expected 0) for toast value 16703 in pg_toast_2619</blockquote><br />
 表示pg_toast_2619表损坏，可能pg_statistic也损坏了。这时候可以对整个DB进行analyze，有可能可以修复。如果在analyse过程中还是报错，那么可以通过删掉现有统计信息数据，重新生成来解决:</p>
 <p><code lang="sql">mydb=# delete from pg_statistic;<br />
 mydb=# reindex table pg_statistic;&nbsp;<br />
-mydb=# vacuum analyze;<code></p>
+mydb=# vacuum analyze;</code></p>
 <p>参考连接：</p>
-<address><a href="http:comments.gmane.orggmane.comp.db.postgresql.bugs29506">http:comments.gmane.orggmane.comp.db.postgresql.bugs29506<a><address><br />
-<address><a href="http:www.spinics.netlistspgsql-adminmsg05911.html">http:www.spinics.netlistspgsql-adminmsg05911.html<a><address></p>
+<address><a href="http://comments.gmane.org/gmane.comp.db.postgresql.bugs/29506">http://comments.gmane.org/gmane.comp.db.postgresql.bugs/29506</a></address><br />
+<address><a href="http://www.spinics.net/lists/pgsql-admin/msg05911.html">http://www.spinics.net/lists/pgsql-admin/msg05911.html</a></address></p>

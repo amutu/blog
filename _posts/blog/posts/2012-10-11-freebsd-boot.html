@@ -26,30 +26,30 @@ comments:
   date_gmt: '2013-03-22 14:44:14 +0800'
   content: I came, I read this atrcile, I conquered.
 ---
-<p>今天看到一篇讲解<a href="http:freebsd.org" target="_blank">FreeBSD<a>自定义开机boot选项的文章：<a href="http:blog.hostileadmin.com20121011so-you-want-a-new-freebsd-boot-loader-option" target="_blank">So You Want A New FreeBSD Boot Loader&nbsp;Option<a>，这个功能非常有用，可以在一台机器上方便的体验不同的内核，或者可以保证因为折腾一个内核失败，还可以方便的启动到其他正常的内核。</p>
-<p>这个文章讲的是FreeBSD 8.x系列的，我按照文章上的方法，想在自己的9.0上验证一下，那边文章要给beastie.4th打补丁，我看了一下9.0的beastie.4th，那个补丁是打不上的。我趁此机会，仔细研究了一下boot目录下的几个文件，对9.0的boot有了大概的了解。这里做一个简单的笔记：</p>
-<p>在boot目录下，有很多文件名相同，扩展名分别为.4th,.rc的文件，如loader.4th、loader.rc，menu.4th、menu.rc等等，这里.4th文件中定义了各种函数，.rc文件定义变量，控制一些逻辑，这些逻辑可能会调用对应.4th中的函数。.rc文件的include了对应的.4th文件，才可以在后面调用.4th中的文件。</p>
+<p>今天看到一篇讲解<a href="http://freebsd.org" target="_blank">FreeBSD</a>自定义开机boot选项的文章：<a href="http://blog.hostileadmin.com/2012/10/11/so-you-want-a-new-freebsd-boot-loader-option/" target="_blank">So You Want A New FreeBSD Boot Loader&nbsp;Option</a>，这个功能非常有用，可以在一台机器上方便的体验不同的内核，或者可以保证因为折腾一个内核失败，还可以方便的启动到其他正常的内核。</p>
+<p>这个文章讲的是FreeBSD 8.x系列的，我按照文章上的方法，想在自己的9.0上验证一下，那边文章要给beastie.4th打补丁，我看了一下9.0的beastie.4th，那个补丁是打不上的。我趁此机会，仔细研究了一下/boot目录下的几个文件，对9.0的boot有了大概的了解。这里做一个简单的笔记：</p>
+<p>在/boot目录下，有很多文件名相同，扩展名分别为.4th,.rc的文件，如loader.4th、loader.rc，menu.4th、menu.rc等等，这里.4th文件中定义了各种函数，.rc文件定义变量，控制一些逻辑，这些逻辑可能会调用对应.4th中的函数。.rc文件的include了对应的.4th文件，才可以在后面调用.4th中的文件。</p>
 <p>boot的可控治入口在loader.rc文件中，这个文件的内容如下：<br />
 <code lang="bash"><br />
 \ Loader.rc<br />
-\ $FreeBSD: release9.0.0sysbooti386loaderloader.rc 151874 2005-10-30 05:41:42Z scottl $<br />
+\ $FreeBSD: release/9.0.0/sys/boot/i386/loader/loader.rc 151874 2005-10-30 05:41:42Z scottl $<br />
 \<br />
 \ Includes additional commands<br />
-include bootloader.4th<br />
+include /boot/loader.4th<br />
 \ Reads and processes loader.conf variables</p>
 <p>start<br />
 \ Tests for password -- executes autoboot first if a password was defined</p>
 <p>check-password<br />
 \ Load in the boot menu</p>
-<p>include bootbeastie.4th<br />
+<p>include /boot/beastie.4th<br />
 \ Start the boot menu</p>
 <p>beastie-start<br />
-<code></p>
+</code></p>
 <p>这个文件中，以"\ "开始的部分为注释，所以真正运行的指令依次是：<br />
-1. include bootloader.4th<br />
+1. include /boot/loader.4th<br />
 2. start<br />
 3. check-password<br />
-4. include bootbeastie.4th<br />
+4. include /boot/beastie.4th<br />
 5. beastie-start</p>
 <p>1只是将loader.4th中定义的函数包含进来，2才是第一个有意义的指令。<br />
 2中的start指令，其实是loader.4th中定义的一个函数，主要是读取loader.conf中用户定义的boot参数。<br />
@@ -68,14 +68,14 @@ include bootloader.4th<br />
         then</p>
 <p>        s" loader_delay" getenv<br />
         -1 = if<br />
-                s" include bootmenu.rc" evaluate<br />
+                s" include /boot/menu.rc" evaluate<br />
         else<br />
                 drop<br />
                 ." Loading Menu (Ctrl-C to Abort)" cr<br />
-                s" set delay_command='include bootmenu.rc'" evaluate<br />
+                s" set delay_command='include /boot/menu.rc'" evaluate<br />
                 s" set delay_showdots" evaluate<br />
                 delay_execute<br />
         then<br />
 ;<br />
-<code></p>
+</code></p>
 <p>可以看出，最主要的是启动menu.rc这个命令文件，这个文件定义了一系列的菜单变量，包括每个菜单的名字，触发按键，触发后执行的命令，触发前后屏幕显示信息等。定义完这些以后，在menu.rc的最后，调用menu-display这个指令。这个指令定义在menu.4th中，他要么执行倒计时最后进入默认的boot选项，要么接受用户的输入，等待用户触发各种按钮后boot。在menu.rc中定义的一系列菜单所关联的菜单命令，都在这个文件中有对应的函数。所以，如果要自定义FreeBSD的boot菜单，应该给menu.rc中增加相应的boot menu，并且把menu触发后执行的命令定义在menu.4th或者其他文件中。如果有时间，准备动手实验一下，给FreeBSD增加开机boot选项。</p>

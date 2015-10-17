@@ -20,12 +20,12 @@ tags: []
 comments: []
 ---
 
-<p>在PostgreSQL 9.4开发版的<a href="http:git.postgresql.orggitweb?p=postgresql.git;a=summary">git<a>上，今天提交了一个特性：<a href="http:git.postgresql.orggitweb?p=postgresql.git;a=commit;h=b560ec1b0d7b910ce13edc51ffaafaca72136e3b">支持聚合函数的filter子句<a>。这个功能支持在同一个group里面，根据filter选择要作用聚合函数的行。在过去，类似的功能只能通过复杂的case when去表达，或者使用窗口函数，这个功能将简化这类功能的实现。</p>
+<p>在PostgreSQL 9.4开发版的<a href="http://git.postgresql.org/gitweb/?p=postgresql.git;a=summary">git</a>上，今天提交了一个特性：<a href="http://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=b560ec1b0d7b910ce13edc51ffaafaca72136e3b">支持聚合函数的filter子句</a>。这个功能支持在同一个group里面，根据filter选择要作用聚合函数的行。在过去，类似的功能只能通过复杂的case when去表达，或者使用窗口函数，这个功能将简化这类功能的实现。</p>
 <p>语法形式如下：</p>
 <p><code lang="sql">aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]<br />
 aggregate_name (ALL expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]<br />
 aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]<br />
-aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ]<code></p>
+aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ]</code></p>
 <p>应用举例：</p>
 <p><code lang="sql">SELECT<br />
     count(*) AS unfiltered,<br />
@@ -34,7 +34,7 @@ FROM generate_series(1,10) AS s(i);<br />
  unfiltered | filtered<br />
 ------------+----------<br />
          10 |        4<br />
-(1 row)<code></p>
+(1 row)</code></p>
 <p>在过去没有FILTER支持的时候，需要这样写：</p>
 <p><code lang="sql">SELECT<br />
     count(*) AS unfiltered,<br />
@@ -43,8 +43,8 @@ FROM generate_series(1,10) AS s(i);<br />
  unfiltered | filtered<br />
 ------------+----------<br />
          10 |        4<br />
-(1 row)<code></p>
+(1 row)</code></p>
 <p>可以看到，用FILTER子句，写法简单直观了很多。</p>
 <p>参考连接：</p>
-<p><a href="http:www.postgresql.orgdocsdevelstaticsql-expressions.html#SYNTAX-AGGREGATES">PostgreSQL聚合表达式<a></p>
-<p><a href="http:www.postgresql.orgdocsdevelstaticsql-select.html">PostgreSQL SELECT语法<a></p>
+<p><a href="http://www.postgresql.org/docs/devel/static/sql-expressions.html#SYNTAX-AGGREGATES">PostgreSQL聚合表达式</a></p>
+<p><a href="http://www.postgresql.org/docs/devel/static/sql-select.html">PostgreSQL SELECT语法</a></p>
