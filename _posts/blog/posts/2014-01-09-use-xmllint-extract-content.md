@@ -31,7 +31,9 @@ comments: []
   <ename>Jack</ename>
   </emp>
   </emplist>
+```
+
+```shell
   $ echo 'cat emplistemp[@no="1"]enametext()'| xmllint --shell foo.xml |sed -n 3p  
   John
-```xml
-
+```
