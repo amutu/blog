@@ -1,0 +1,28 @@
+---
+layout: post
+status: publish
+published: true
+title: rsync级联时须注意exclude中转目录中的隐藏文件
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 138
+wordpress_url: http://amutu.com/blog/?p=138
+date: '2013-03-17 09:11:08 +0800'
+date_gmt: '2013-03-17 01:11:08 +0800'
+categories:
+- linux
+tags: []
+comments: []
+---
+<p>今天发生一则磁盘告警，一台作为备份机器的磁盘满了。这个机器约有5T存储，前几天的印象是只使用了20%多，怎么一下子就告警了呢？</p>
+<p>经过仔细定位，发现有一个目录有大量的.xxx.7Obwry,..xxx.xObwff.DHDpg9类似形式的隐藏文件，xxx文件都是比较大的日志文件，我做备份时是过滤掉的，为什么会在这里？从文件名可以看出来，.xxx.7Obwry是rsync过来的文件，..xxx.xObwff.DHDpg9是这类文件rsync过来时产生的临时文件。最后发现xxx这类文件我在rsync到备份机器时，虽然是做了exclude的，但是因为rsync到备份机器的客户端机器其实是一个中转机器，它也是通过rsync命令，从其他机器上获得数据的，在做rsync到备份机时，中转目录中会有.xxx类似的文件，这些我是没有exclude的，所以会rsync到备份机器，因为是隐藏文件，所以也很难觉察到。</p>
+<p>改进措施：</p>
+<p>1.在中转机器rsync到备份机器的参数中，增加 --exclude=&lsquo;.xxx*&rsquo;类似的参数。</p>
+<p>2.降低中转机器rsync到备份机器的运行频率。之前数据rsync到中转机器的频率是30分钟同步一次，中转机器rsync到备份机器是5分钟一次，这样使后者很容易看到前者rsync的中间文件。现在将后者从5分钟一次调整到30分钟一次。</p>
+<p>3.rsync命令默认是会同步目录中的隐藏文件的，这点要牢记。</p>
+<p>&nbsp;</p>

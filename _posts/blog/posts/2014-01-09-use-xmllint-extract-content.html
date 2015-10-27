@@ -1,0 +1,34 @@
+---
+layout: post
+status: publish
+published: true
+title: "使用xmllint抽取xml内容"
+author:
+  display_name: amutu
+  login: amutu
+  email: zhao6014@gmail.com
+  url: ''
+author_login: amutu
+author_email: zhao6014@gmail.com
+wordpress_id: 405
+wordpress_url: http://amutu.com/blog/?p=405
+date: '2014-01-09 18:00:20 +0800'
+date_gmt: '2014-01-09 10:00:20 +0800'
+categories:
+- linux
+tags: []
+comments: []
+---
+<p>$ cat foo.xml<br />
+<emplist><br />
+<emp no="1"><br />
+<ename>John</ename><br />
+</emp><br />
+<emp no="2"><br />
+<ename>Jack</ename><br />
+</emp><br />
+</emplist><br />
+$ echo 'cat //emplist/emp[@no="1"]/ename/text()'|<br />
+xmllint --shell foo.xml |<br />
+sed -n 3p<br />
+John</p>
